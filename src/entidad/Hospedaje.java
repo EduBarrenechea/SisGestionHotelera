@@ -8,7 +8,7 @@
 package entidad;
 
 public class Hospedaje {
-	private int codHospedaje,codReserva,codCliente,codHabitacion,codRecepcionista,tipoHospedaje,estadoHospedaje;
+	private int codHospedaje,codReserva,codCliente,numHabitacion,codRecepcionista,tipoHospedaje,estadoHospedaje;
 	private String fechaRegistroHospedaje;
 	public Hospedaje(int codHospedaje, int codReserva, int codCliente,
 			int codHabitacion, int codRecepcionista, int tipoHospedaje,
@@ -16,7 +16,7 @@ public class Hospedaje {
 		this.codHospedaje = codHospedaje;
 		this.codReserva = codReserva;
 		this.codCliente = codCliente;
-		this.codHabitacion = codHabitacion;
+		this.numHabitacion = codHabitacion;
 		this.codRecepcionista = codRecepcionista;
 		this.tipoHospedaje = tipoHospedaje;
 		this.fechaRegistroHospedaje = fechaRegistroHospedaje;
@@ -41,10 +41,10 @@ public class Hospedaje {
 		this.codCliente = codCliente;
 	}
 	public int getCodHabitacion() {
-		return codHabitacion;
+		return numHabitacion;
 	}
 	public void setCodHabitacion(int codHabitacion) {
-		this.codHabitacion = codHabitacion;
+		this.numHabitacion = codHabitacion;
 	}
 	public int getCodRecepcionista() {
 		return codRecepcionista;
