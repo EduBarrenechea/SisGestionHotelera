@@ -5,30 +5,46 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
-public class MantenimientoHabitacion extends JDialog {
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+import entidad.Habitacion;
+import controlador.ArregloHabitacion;
+import java.text.DecimalFormat;
+
+public class MantenimientoHabitacion extends JDialog implements ItemListener, ActionListener {
 
 	private final JPanel contentPanel = new JPanel();
-	private JLabel lblOpcin;
+	private JLabel lblOpcion;
 	private JComboBox cboOpcion;
-	private JLabel lblNmero;
+	private JLabel lblNumero;
 	private JTextField txtNumero;
-	private JLabel lblDescripcin;
+	private JLabel lblDescripcion;
 	private JTextField txtDescripcion;
 	private JLabel lblTipo;
 	private JTextField txtTipo;
-	private JLabel lblUbicacin;
+	private JLabel lblUbicacion;
 	private JTextField txtUbicacion;
 	private JLabel lblCosto;
 	private JTextField txtCosto;
 	private JButton btnProcesar;
 	private JButton btnLimpiar;
-
+	private JScrollPane scrollPane;
+	private JTextArea txtS;
+	ArregloHabitacion aHab = new ArregloHabitacion();
+	DecimalFormat sdf= new DecimalFormat("#,###.00");
 	/**
 	 * Launch the application.
 	 */
@@ -53,73 +69,349 @@ public class MantenimientoHabitacion extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		
-		lblOpcin = new JLabel("Opci\u00F3n :");
-		lblOpcin.setBounds(10, 11, 85, 14);
-		contentPanel.add(lblOpcin);
+		lblOpcion = new JLabel("Opci\u00F3n :");
+		lblOpcion.setBounds(10, 11, 85, 14);
+		contentPanel.add(lblOpcion);
 		
 		cboOpcion = new JComboBox();
 		cboOpcion.setToolTipText("Seleccione operaci\u00F3n a realizar");
 		cboOpcion.setBounds(105, 8, 216, 20);
+		cboOpcion.addItem("--Seleccione Operacion--");
 		cboOpcion.addItem("Ingresar Registro");
 		cboOpcion.addItem("Busqueda por Codigo");
 		cboOpcion.addItem("Actualizar Registro");
 		cboOpcion.addItem("Eliminar Registro");
 		cboOpcion.addItem("Listar");
+		cboOpcion.addItemListener(this);
 		contentPanel.add(cboOpcion);
 		
-		lblNmero = new JLabel("N\u00FAmero :");
-		lblNmero.setBounds(10, 36, 70, 14);
-		contentPanel.add(lblNmero);
+		lblNumero = new JLabel("N\u00FAmero :");
+		lblNumero.setBounds(10, 36, 70, 14);
+		contentPanel.add(lblNumero);
+		lblNumero.setVisible(false);
 		
 		txtNumero = new JTextField();
 		txtNumero.setBounds(105, 33, 86, 20);
 		contentPanel.add(txtNumero);
 		txtNumero.setColumns(10);
+		txtNumero.setVisible(false);
 		
-		lblDescripcin = new JLabel("Descripci\u00F3n :");
-		lblDescripcin.setBounds(10, 61, 96, 14);
-		contentPanel.add(lblDescripcin);
+		lblDescripcion = new JLabel("Descripci\u00F3n :");
+		lblDescripcion.setBounds(10, 61, 96, 14);
+		contentPanel.add(lblDescripcion);
+		lblDescripcion.setVisible(false);
 		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setBounds(105, 58, 216, 20);
 		contentPanel.add(txtDescripcion);
 		txtDescripcion.setColumns(10);
+		txtDescripcion.setVisible(false);
 		
 		lblTipo = new JLabel("Tipo :");
 		lblTipo.setBounds(10, 86, 46, 14);
 		contentPanel.add(lblTipo);
+		lblTipo.setVisible(false);
 		
 		txtTipo = new JTextField();
 		txtTipo.setBounds(105, 83, 86, 20);
 		contentPanel.add(txtTipo);
 		txtTipo.setColumns(10);
+		txtTipo.setVisible(false);
 		
-		lblUbicacin = new JLabel("Ubicaci\u00F3n :");
-		lblUbicacin.setBounds(10, 111, 70, 14);
-		contentPanel.add(lblUbicacin);
+		lblUbicacion = new JLabel("Ubicaci\u00F3n :");
+		lblUbicacion.setBounds(10, 111, 70, 14);
+		contentPanel.add(lblUbicacion);
+		lblUbicacion.setVisible(false);
 		
 		txtUbicacion = new JTextField();
 		txtUbicacion.setBounds(105, 108, 86, 20);
 		contentPanel.add(txtUbicacion);
 		txtUbicacion.setColumns(10);
+		txtUbicacion.setVisible(false);
 		
 		lblCosto = new JLabel("Costo :");
 		lblCosto.setBounds(10, 136, 46, 14);
 		contentPanel.add(lblCosto);
+		lblCosto.setVisible(false);		
 		
 		txtCosto = new JTextField();
 		txtCosto.setBounds(105, 133, 86, 20);
 		contentPanel.add(txtCosto);
 		txtCosto.setColumns(10);
+		txtCosto.setVisible(false);
 		
 		btnProcesar = new JButton("Procesar");
+		btnProcesar.addActionListener(this);
 		btnProcesar.setToolTipText("Procesa la operacion seleccionada");
 		btnProcesar.setBounds(363, 7, 89, 23);
+		btnProcesar.setEnabled(false);
 		contentPanel.add(btnProcesar);
 		
 		btnLimpiar = new JButton("Limpiar");
+		btnLimpiar.addActionListener(this);
 		btnLimpiar.setToolTipText("Limpia las cajas de texto");
 		btnLimpiar.setBounds(363, 32, 89, 23);
 		contentPanel.add(btnLimpiar);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 159, 477, 290);
+		contentPanel.add(scrollPane);
+		
+		txtS = new JTextArea();
+		scrollPane.setViewportView(txtS);
+	}
+
+	
+
+	public void itemStateChanged(ItemEvent e) {
+		if (e.getSource() == cboOpcion)
+			seleccionar();		
+	}
+	
+	void seleccionar(){
+		switch (cboOpcion.getSelectedIndex()) {
+		case 0:
+			btnProcesar.setEnabled(false);
+			lblNumero.setVisible(false);
+			txtNumero.setVisible(false);
+			lblDescripcion.setVisible(false);
+			txtDescripcion.setVisible(false);
+			lblTipo.setVisible(false);
+			txtTipo.setVisible(false);
+			lblUbicacion.setVisible(false);
+			txtUbicacion.setVisible(false);
+			lblCosto.setVisible(false);
+			txtCosto.setVisible(false);				
+			break;
+	
+		case 1:
+				btnProcesar.setEnabled(true);
+				lblNumero.setVisible(true);
+				txtNumero.setVisible(true);
+				lblDescripcion.setVisible(true);
+				txtDescripcion.setVisible(true);
+				lblTipo.setVisible(true);
+				txtTipo.setVisible(true);
+				lblUbicacion.setVisible(true);
+				txtUbicacion.setVisible(true);
+				lblCosto.setVisible(true);
+				txtCosto.setVisible(true);
+				txtNumero.setText(""+aHab.generaCodigo());
+				break;
+		case 2:
+				btnProcesar.setEnabled(true);
+				lblNumero.setVisible(true);
+				txtNumero.setVisible(true);
+				lblDescripcion.setVisible(false);
+				txtDescripcion.setVisible(false);
+				lblTipo.setVisible(false);
+				txtTipo.setVisible(false);
+				lblUbicacion.setVisible(false);
+				txtUbicacion.setVisible(false);
+				lblCosto.setVisible(false);
+				txtCosto.setVisible(false);				
+				break;
+		case 3:
+				btnProcesar.setEnabled(true);
+				lblNumero.setVisible(true);
+				txtNumero.setVisible(true);
+				lblDescripcion.setVisible(true);
+				txtDescripcion.setVisible(true);
+				lblTipo.setVisible(true);
+				txtTipo.setVisible(true);
+				lblUbicacion.setVisible(true);
+				txtUbicacion.setVisible(true);
+				lblCosto.setVisible(true);
+				txtCosto.setVisible(true);
+				if(aHab.tamaño()>0){
+					listar();
+					btnProcesar.setEnabled(true);
+				}else{
+					btnProcesar.setEnabled(false);
+				}
+				break;
+		case 4:
+				btnProcesar.setEnabled(true);
+				lblNumero.setVisible(true);
+				txtNumero.setVisible(true);
+				lblDescripcion.setVisible(false);
+				txtDescripcion.setVisible(false);
+				lblTipo.setVisible(false);
+				txtTipo.setVisible(false);
+				lblUbicacion.setVisible(false);
+				txtUbicacion.setVisible(false);
+				lblCosto.setVisible(false);
+				txtCosto.setVisible(false);
+				if(aHab.tamaño()>0){
+					listar();
+					btnProcesar.setEnabled(true);
+				}else{
+					btnProcesar.setEnabled(false);
+				}
+				break;
+			case 5:
+				btnProcesar.setEnabled(true);
+				lblNumero.setVisible(false);
+				txtNumero.setVisible(false);
+				lblDescripcion.setVisible(false);
+				txtDescripcion.setVisible(false);
+				lblTipo.setVisible(false);
+				txtTipo.setVisible(false);
+				lblUbicacion.setVisible(false);
+				txtUbicacion.setVisible(false);
+				lblCosto.setVisible(false);
+				txtCosto.setVisible(false);				
+				break;
+		}
+	}
+
+	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnProcesar) {
+			do_btnProcesar_actionPerformed(arg0);
+		}
+		if (arg0.getSource() == btnLimpiar) {
+			do_btnLimpiar_actionPerformed(arg0);
+		}
+	}
+	protected void do_btnLimpiar_actionPerformed(ActionEvent arg0) {
+		limpiar();
+	}
+	void limpiar(){
+		txtNumero.setText("");
+		txtDescripcion.setText("");
+		txtTipo.setText("");
+		txtUbicacion.setText("");
+		txtCosto.setText("");
+		txtNumero.requestFocus();
+	}
+	protected void do_btnProcesar_actionPerformed(ActionEvent arg0) {
+		procesar();
+	}
+	
+	void procesar() {
+		switch(cboOpcion.getSelectedIndex()) {
+			case 1 : ingresar(); break;				
+			case 2 : buscar(); break;				
+			case 3 : actualizar();break;			
+			case 4 : eliminar(); break;				
+			case 5 : listar(); break;			
+		}
+	}
+	
+	int getNumero(){return Integer.parseInt(txtNumero.getText());}
+	String getDescripcion(){return txtDescripcion.getText();}
+	int getTipo(){return Integer.parseInt(txtTipo.getText());}
+	int getUbicacion(){return Integer.parseInt(txtUbicacion.getText());}
+	double getCosto(){return Double.parseDouble(txtCosto.getText());}
+	
+	void ingresar(){
+		if(validarVacio()){
+		Habitacion h = aHab.buscar(getNumero());
+		if(h==null){
+			h = validarDatos();
+			if(h!=null){
+			aHab.creacion(h);
+			listar();
+			}else mensaje("Ingrese correctamente los datos");
+		}
+		else 
+			mensaje("Código ya existe, intente con otro");
+		}else mensaje("Llene todos los campos");
+	}
+	
+	void buscar(){
+		if(!txtNumero.getText().isEmpty()){
+			try {
+				Habitacion h = aHab.buscar(getNumero());
+				if(h != null)
+					listar(h);			
+				else 
+					mensaje("No hay habitación con ese código");
+			} catch (Exception e) {
+				mensaje("Llena correctamente el código");
+			}
+		}else mensaje("Ingrese código");
+	}
+	void actualizar(){
+		if(validarVacio()){
+			Habitacion h = aHab.buscar(getNumero());
+			if(h!=null){
+				h= validarDatos();
+				if(h!=null){
+				aHab.modificar(h);
+				listar();
+				}else mensaje("Llene correctamente los campos");
+			}
+		}else mensaje("Llene todos los campos");
+	}
+	void eliminar(){
+		
+		if(!txtNumero.getText().isEmpty()){
+			try {
+				Habitacion h = aHab.buscar(getNumero());
+				if ( h != null){
+					aHab.eliminar(h);
+					listar();
+				}else mensaje("Código no existe");
+			} catch (Exception e) {
+				mensaje("Llena correctamente el código");
+			}
+		}else
+			mensaje("Escriba un código");		
+		}
+	
+	void listar(){
+		txtS.setText("");
+		imprimir("Número\tDescripcion\tTipo\tUbicación\tCosto");
+		for (int i = 0; i < aHab.tamaño(); i++) {
+			Habitacion h = aHab.obtener(i);
+			imprimir(rellenar(String.valueOf(h.getNumHabitacion()))+"\t"+
+					 rellenar(h.getDesHabitacion())+"\t"+
+					 rellenar(String.valueOf(h.getTipoHabitacion()))+"\t"+
+					 rellenar(String.valueOf(h.getUbicacionHabitacion()))+"\t"+
+					 sdf.format((h.getCostoHabitacion())));
+		}
+	}
+	
+	void listar(Habitacion h){
+		txtS.setText("");
+		imprimir("Número\tDescripcion\tTipo\tUbicación\tCosto");
+		imprimir(rellenar(String.valueOf(h.getNumHabitacion()))+"\t"+
+					 rellenar(h.getDesHabitacion())+"\t"+
+					 rellenar(String.valueOf(h.getTipoHabitacion()))+"\t"+
+					 rellenar(String.valueOf(h.getUbicacionHabitacion()))+"\t"+
+					 sdf.format((h.getCostoHabitacion())));
+		
+	}
+	
+	void imprimir(String cad){
+		txtS.append(cad + "\n");
+	}
+	
+	String rellenar(String cad){
+		int longitud=cad.length();
+		for(int i=longitud; i<10; i++)
+			cad+=' ';
+		return cad;
+	}
+	
+	void mensaje(String m) {
+		JOptionPane.showMessageDialog(this,m);
+	}
+	
+	boolean validarVacio(){
+		if(!txtNumero.getText().isEmpty() && !txtDescripcion.getText().isEmpty() && !txtTipo.getText().isEmpty() && !txtUbicacion.getText().isEmpty() && !txtCosto.getText().isEmpty())
+			return true;
+		return false;
+	}
+	
+	Habitacion validarDatos(){
+		Habitacion h = null;
+		try {
+			h= new Habitacion(getNumero(), getDescripcion(), getTipo(), getUbicacion(), getCosto());			
+		} catch (Exception e) {
+			
+		}
+		return h;
 	}
 }
