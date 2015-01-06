@@ -15,7 +15,7 @@ public class ArregloRecepcionista {
 	
 	public int generaCodigo(){
 		if(tamaño()==0)
-			return 101;
+			return 1001;
 		else
 			return rec.get(tamaño()-1).getCodRecepcionista()+1;
 	}

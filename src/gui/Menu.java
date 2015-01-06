@@ -81,6 +81,7 @@ public class Menu extends JFrame implements ActionListener {
 		mnMantenimiento.add(mntmClienteM);
 		
 		mntmRecepcionistaM = new JMenuItem("Recepcionista");
+		mntmRecepcionistaM.addActionListener(this);
 		mnMantenimiento.add(mntmRecepcionistaM);
 		
 		mnReservaYHospedaje = new JMenu("Reserva");
@@ -122,6 +123,9 @@ public class Menu extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == mntmRecepcionistaM) {
+			do_mntmRecepcionistaM_actionPerformed(arg0);
+		}
 		if (arg0.getSource() == mntmClienteM) {
 			do_mntmClienteM_actionPerformed(arg0);
 		}
@@ -142,5 +146,9 @@ public class Menu extends JFrame implements ActionListener {
 	protected void do_mntmClienteM_actionPerformed(ActionEvent arg0) {
 		MantenimientoCliente mCli = new MantenimientoCliente();
 		mCli.setVisible(true);
+	}
+	protected void do_mntmRecepcionistaM_actionPerformed(ActionEvent arg0) {
+		MantenimientoRecepcionista mRec = new MantenimientoRecepcionista();
+		mRec.setVisible(true);
 	}
 }

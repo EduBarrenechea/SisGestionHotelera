@@ -24,6 +24,16 @@ public class Habitacion {
 	public void setTipoHabitacion(int tipoHabitacion) {
 		this.tipoHabitacion = tipoHabitacion;
 	}
+	
+	public String getTipo(){
+		String tipo="";
+		switch (this.tipoHabitacion) {
+		case 1:tipo="Doble";break;
+		case 2:tipo="Matrimonial";break;
+		case 3:tipo="Simple";break;
+		}
+		return tipo;
+	}
 	public int getUbicacionHabitacion() {
 		return ubicacionHabitacion;
 	}

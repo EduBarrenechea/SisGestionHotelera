@@ -6,7 +6,7 @@
 package entidad;
 
 public class Reserva {
-	private int codReserva,codCliente,codCajero,codRecepcionista,numeroHabitacion,estadoReserva;
+	private int codReserva,codCliente,codRecepcionista,numeroHabitacion,estadoReserva;
 	private String fechaRegistroReserva, fechaIngresoReserva,fechaSalidaReserva;
 	public Reserva(int codReserva, int codCliente, int codCajero,
 			int codRecepcionista, int numeroHabitacion,
@@ -14,7 +14,6 @@ public class Reserva {
 			String fechaSalidaReserva, int estadoReserva) {
 		this.codReserva = codReserva;
 		this.codCliente = codCliente;
-		this.codCajero = codCajero;
 		this.codRecepcionista = codRecepcionista;
 		this.numeroHabitacion = numeroHabitacion;
 		this.fechaRegistroReserva = fechaRegistroReserva;
@@ -34,12 +33,7 @@ public class Reserva {
 	public void setCodCliente(int codCliente) {
 		this.codCliente = codCliente;
 	}
-	public int getCodCajero() {
-		return codCajero;
-	}
-	public void setCodCajero(int codCajero) {
-		this.codCajero = codCajero;
-	}
+
 	public int getCodRecepcionista() {
 		return codRecepcionista;
 	}

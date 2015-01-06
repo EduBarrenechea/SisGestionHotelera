@@ -1,4 +1,4 @@
-/*Estado Cliente
+/*Estado Recepcionista
  * 0 = No activo
  * 1 = Activo
  */
@@ -27,6 +27,15 @@ public class Recepcionista {
 	}
 	public void setEstadoRecepcionista(int estadoRecepcionista) {
 		this.estadoRecepcionista = estadoRecepcionista;
+	}
+	
+	public String getEstado(){
+		String est;
+		if (this.estadoRecepcionista == 0)
+			est = "No Activo";
+		else 
+			est = "Activo";
+		return est;
 	}
 	public String getApellidoRecepcionista() {
 		return apellidoRecepcionista;

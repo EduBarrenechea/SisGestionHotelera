@@ -29,8 +29,8 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 
 	private final JPanel contentPanel = new JPanel();
 	private JLabel lblOpcion,lblNumero,lblDescripcion,lblTipo,lblUbicacion,lblCosto;
-	private JComboBox cboOpcion;
-	private JTextField txtNumero,txtDescripcion,txtTipo,txtUbicacion,txtCosto;
+	private JComboBox cboOpcion,cboTipo;
+	private JTextField txtNumero,txtDescripcion,txtUbicacion,txtCosto;
 	private JButton btnProcesar,btnLimpiar;
 	private JScrollPane scrollPane;
 	private JTextArea txtS;
@@ -106,12 +106,15 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		contentPanel.add(lblTipo);
 		lblTipo.setVisible(false);
 		
-		txtTipo = new JTextField();
-		txtTipo.setToolTipText("Ingrese en n\u00FAmeros");
-		txtTipo.setBounds(105, 83, 86, 20);
-		contentPanel.add(txtTipo);
-		txtTipo.setColumns(10);
-		txtTipo.setVisible(false);
+		cboTipo = new JComboBox();
+		cboTipo.setToolTipText("Seleccione Tipo de Habitaci\u00F3n");
+		cboTipo.setBounds(105, 83, 160, 20);
+		cboTipo.addItem("--Seleccione Tipo--");
+		cboTipo.addItem("Doble");
+		cboTipo.addItem("Matrimonial");
+		cboTipo.addItem("Simple");
+		contentPanel.add(cboTipo);
+		cboTipo.setVisible(false);
 		
 		lblUbicacion = new JLabel("Ubicaci\u00F3n :");
 		lblUbicacion.setBounds(10, 111, 70, 14);
@@ -161,6 +164,8 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		lblParaAyudaColoque.setForeground(Color.BLUE);
 		lblParaAyudaColoque.setBounds(201, 136, 312, 14);
 		contentPanel.add(lblParaAyudaColoque);
+		
+
 	}
 
 	
@@ -179,7 +184,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 			lblDescripcion.setVisible(false);
 			txtDescripcion.setVisible(false);
 			lblTipo.setVisible(false);
-			txtTipo.setVisible(false);
+			cboTipo.setVisible(false);
 			lblUbicacion.setVisible(false);
 			txtUbicacion.setVisible(false);
 			lblCosto.setVisible(false);
@@ -194,7 +199,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				lblDescripcion.setVisible(true);
 				txtDescripcion.setVisible(true);
 				lblTipo.setVisible(true);
-				txtTipo.setVisible(true);
+				cboTipo.setVisible(true);
 				lblUbicacion.setVisible(true);
 				txtUbicacion.setVisible(true);
 				lblCosto.setVisible(true);
@@ -209,7 +214,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				lblDescripcion.setVisible(false);
 				txtDescripcion.setVisible(false);
 				lblTipo.setVisible(false);
-				txtTipo.setVisible(false);
+				cboTipo.setVisible(false);
 				lblUbicacion.setVisible(false);
 				txtUbicacion.setVisible(false);
 				lblCosto.setVisible(false);
@@ -229,7 +234,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				lblDescripcion.setVisible(true);
 				txtDescripcion.setVisible(true);
 				lblTipo.setVisible(true);
-				txtTipo.setVisible(true);
+				cboTipo.setVisible(true);
 				lblUbicacion.setVisible(true);
 				txtUbicacion.setVisible(true);
 				lblCosto.setVisible(true);
@@ -248,7 +253,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				lblDescripcion.setVisible(false);
 				txtDescripcion.setVisible(false);
 				lblTipo.setVisible(false);
-				txtTipo.setVisible(false);
+				cboTipo.setVisible(false);
 				lblUbicacion.setVisible(false);
 				txtUbicacion.setVisible(false);
 				lblCosto.setVisible(false);
@@ -267,7 +272,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				lblDescripcion.setVisible(false);
 				txtDescripcion.setVisible(false);
 				lblTipo.setVisible(false);
-				txtTipo.setVisible(false);
+				cboTipo.setVisible(false);
 				lblUbicacion.setVisible(false);
 				txtUbicacion.setVisible(false);
 				lblCosto.setVisible(false);
@@ -290,7 +295,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	void limpiar(){
 		txtNumero.setText("");
 		txtDescripcion.setText("");
-		txtTipo.setText("");
+		cboTipo.setSelectedItem(0);
 		txtUbicacion.setText("");
 		txtCosto.setText("");
 		txtNumero.requestFocus();
@@ -311,7 +316,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	
 	int getNumero(){return Integer.parseInt(txtNumero.getText());}
 	String getDescripcion(){return txtDescripcion.getText();}
-	int getTipo(){return Integer.parseInt(txtTipo.getText());}
+	int getTipo(){return cboTipo.getSelectedIndex();}
 	int getUbicacion(){return Integer.parseInt(txtUbicacion.getText());}
 	double getCosto(){return Double.parseDouble(txtCosto.getText());}
 	
@@ -390,7 +395,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 			Habitacion h = aHab.obtener(i);
 			imprimir(rellenar(String.valueOf(h.getNumHabitacion()))+"\t"+
 					 rellenar(h.getDesHabitacion())+"\t"+
-					 rellenar(String.valueOf(h.getTipoHabitacion()))+"\t"+
+					 rellenar(h.getTipo())+"\t"+
 					 rellenar(String.valueOf(h.getUbicacionHabitacion()))+"\t"+
 					 sdf.format((h.getCostoHabitacion())));
 		}
@@ -398,12 +403,12 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	
 	void listar(Habitacion h){
 		txtS.setText("");
-		imprimir("Número\tDescripcion\tTipo\tUbicación\tCosto");
-		imprimir(rellenar(String.valueOf(h.getNumHabitacion()))+"\t"+
-					 rellenar(h.getDesHabitacion())+"\t"+
-					 rellenar(String.valueOf(h.getTipoHabitacion()))+"\t"+
-					 rellenar(String.valueOf(h.getUbicacionHabitacion()))+"\t"+
-					 sdf.format((h.getCostoHabitacion())));
+
+		imprimir("Número\t:  "+String.valueOf(h.getNumHabitacion()));
+		imprimir("Descripción\t:  "+(h.getDesHabitacion()));
+		imprimir("Tipo\t:  "+(h.getTipo()));
+		imprimir("Ubicación\t:  "+(String.valueOf(h.getUbicacionHabitacion())));
+		imprimir("Costo\t:  "+sdf.format((h.getCostoHabitacion())));
 		
 	}
 	
@@ -423,7 +428,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	}
 	
 	boolean validarVacio(){
-		if(!txtNumero.getText().isEmpty() && !txtDescripcion.getText().isEmpty() && !txtTipo.getText().isEmpty() && !txtUbicacion.getText().isEmpty() && !txtCosto.getText().isEmpty())
+		if(!txtNumero.getText().isEmpty() && !txtDescripcion.getText().isEmpty() && cboTipo.getSelectedIndex()>0 && !txtUbicacion.getText().isEmpty() && !txtCosto.getText().isEmpty())
 			return true;
 		return false;
 	}
