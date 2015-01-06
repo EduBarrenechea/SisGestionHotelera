@@ -24,6 +24,15 @@ public class Cliente {
 	public int getEstadoCliente() {
 		return estadoCliente;
 	}
+	
+	public String getEstado(){
+		String est;
+		if (this.estadoCliente == 0)
+			est = "No Activo";
+		else 
+			est = "Activo";
+		return est;
+	}
 	public void setEstadoCliente(int estadoCliente) {
 		this.estadoCliente = estadoCliente;
 	}

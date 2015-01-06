@@ -44,4 +44,8 @@ public class ArregloHabitacion {
 			if(hab.get(i).getNumHabitacion() == h.getNumHabitacion())
 				hab.set(i, h);
 	}
+	
+	//public void cargar(){}
+	
+	//public void grabar(){}
 }

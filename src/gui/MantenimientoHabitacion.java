@@ -23,28 +23,20 @@ import javax.swing.JTextArea;
 import entidad.Habitacion;
 import controlador.ArregloHabitacion;
 import java.text.DecimalFormat;
+import java.awt.Color;
 
 public class MantenimientoHabitacion extends JDialog implements ItemListener, ActionListener {
 
 	private final JPanel contentPanel = new JPanel();
-	private JLabel lblOpcion;
+	private JLabel lblOpcion,lblNumero,lblDescripcion,lblTipo,lblUbicacion,lblCosto;
 	private JComboBox cboOpcion;
-	private JLabel lblNumero;
-	private JTextField txtNumero;
-	private JLabel lblDescripcion;
-	private JTextField txtDescripcion;
-	private JLabel lblTipo;
-	private JTextField txtTipo;
-	private JLabel lblUbicacion;
-	private JTextField txtUbicacion;
-	private JLabel lblCosto;
-	private JTextField txtCosto;
-	private JButton btnProcesar;
-	private JButton btnLimpiar;
+	private JTextField txtNumero,txtDescripcion,txtTipo,txtUbicacion,txtCosto;
+	private JButton btnProcesar,btnLimpiar;
 	private JScrollPane scrollPane;
 	private JTextArea txtS;
 	ArregloHabitacion aHab = new ArregloHabitacion();
 	DecimalFormat sdf= new DecimalFormat("#,###.00");
+	private JLabel lblParaAyudaColoque;
 	/**
 	 * Launch the application.
 	 */
@@ -76,7 +68,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		cboOpcion = new JComboBox();
 		cboOpcion.setToolTipText("Seleccione operaci\u00F3n a realizar");
 		cboOpcion.setBounds(105, 8, 216, 20);
-		cboOpcion.addItem("--Seleccione Operacion--");
+		cboOpcion.addItem("--Seleccione Opcion--");
 		cboOpcion.addItem("Ingresar Registro");
 		cboOpcion.addItem("Busqueda por Codigo");
 		cboOpcion.addItem("Actualizar Registro");
@@ -91,6 +83,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		lblNumero.setVisible(false);
 		
 		txtNumero = new JTextField();
+		txtNumero.setToolTipText("Ingrese Numero de Habitaci\u00F3n");
 		txtNumero.setBounds(105, 33, 86, 20);
 		contentPanel.add(txtNumero);
 		txtNumero.setColumns(10);
@@ -102,6 +95,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		lblDescripcion.setVisible(false);
 		
 		txtDescripcion = new JTextField();
+		txtDescripcion.setToolTipText("Ingrese Descripci\u00F3n de la habitaci\u00F3n");
 		txtDescripcion.setBounds(105, 58, 216, 20);
 		contentPanel.add(txtDescripcion);
 		txtDescripcion.setColumns(10);
@@ -113,6 +107,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		lblTipo.setVisible(false);
 		
 		txtTipo = new JTextField();
+		txtTipo.setToolTipText("Ingrese en n\u00FAmeros");
 		txtTipo.setBounds(105, 83, 86, 20);
 		contentPanel.add(txtTipo);
 		txtTipo.setColumns(10);
@@ -124,6 +119,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		lblUbicacion.setVisible(false);
 		
 		txtUbicacion = new JTextField();
+		txtUbicacion.setToolTipText("Ingrese en n\u00FAmeros");
 		txtUbicacion.setBounds(105, 108, 86, 20);
 		contentPanel.add(txtUbicacion);
 		txtUbicacion.setColumns(10);
@@ -135,6 +131,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		lblCosto.setVisible(false);		
 		
 		txtCosto = new JTextField();
+		txtCosto.setToolTipText("Ingrese en decimal");
 		txtCosto.setBounds(105, 133, 86, 20);
 		contentPanel.add(txtCosto);
 		txtCosto.setColumns(10);
@@ -159,6 +156,11 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		
 		txtS = new JTextArea();
 		scrollPane.setViewportView(txtS);
+		
+		lblParaAyudaColoque = new JLabel("Para ayuda coloque el puntero sobre el elemento");
+		lblParaAyudaColoque.setForeground(Color.BLUE);
+		lblParaAyudaColoque.setBounds(201, 136, 312, 14);
+		contentPanel.add(lblParaAyudaColoque);
 	}
 
 	
@@ -186,6 +188,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	
 		case 1:
 				btnProcesar.setEnabled(true);
+				txtDescripcion.requestFocus();
 				lblNumero.setVisible(true);
 				txtNumero.setVisible(true);
 				lblDescripcion.setVisible(true);
@@ -202,6 +205,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				btnProcesar.setEnabled(true);
 				lblNumero.setVisible(true);
 				txtNumero.setVisible(true);
+				txtNumero.requestFocus();
 				lblDescripcion.setVisible(false);
 				txtDescripcion.setVisible(false);
 				lblTipo.setVisible(false);
@@ -209,12 +213,19 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				lblUbicacion.setVisible(false);
 				txtUbicacion.setVisible(false);
 				lblCosto.setVisible(false);
-				txtCosto.setVisible(false);				
+				txtCosto.setVisible(false);
+				if(aHab.tamaño()>0){
+					listar();
+					btnProcesar.setEnabled(true);
+				}else{
+					btnProcesar.setEnabled(false);
+				}
 				break;
 		case 3:
 				btnProcesar.setEnabled(true);
 				lblNumero.setVisible(true);
 				txtNumero.setVisible(true);
+				txtNumero.requestFocus();
 				lblDescripcion.setVisible(true);
 				txtDescripcion.setVisible(true);
 				lblTipo.setVisible(true);
@@ -224,7 +235,6 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				lblCosto.setVisible(true);
 				txtCosto.setVisible(true);
 				if(aHab.tamaño()>0){
-					listar();
 					btnProcesar.setEnabled(true);
 				}else{
 					btnProcesar.setEnabled(false);
@@ -234,6 +244,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				btnProcesar.setEnabled(true);
 				lblNumero.setVisible(true);
 				txtNumero.setVisible(true);
+				txtNumero.requestFocus();
 				lblDescripcion.setVisible(false);
 				txtDescripcion.setVisible(false);
 				lblTipo.setVisible(false);
@@ -305,17 +316,29 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	double getCosto(){return Double.parseDouble(txtCosto.getText());}
 	
 	void ingresar(){
+		int num;
 		if(validarVacio()){
-		Habitacion h = aHab.buscar(getNumero());
-		if(h==null){
-			h = validarDatos();
-			if(h!=null){
-			aHab.creacion(h);
-			listar();
-			}else mensaje("Ingrese correctamente los datos");
-		}
-		else 
-			mensaje("Código ya existe, intente con otro");
+			try {
+				num = getNumero();
+				Habitacion h = aHab.buscar(num);
+				if(h==null){
+					h = validarDatos();
+					if(h!=null){
+					aHab.creacion(h);
+					listar();
+					limpiar();
+					txtNumero.setText(""+aHab.generaCodigo());
+					txtDescripcion.requestFocus();
+					}else mensaje("Ingrese correctamente los datos");
+				}
+				else 
+					mensaje("Código ya existe, intente con otro");
+			} catch (Exception e) {
+				mensaje("Número de Habitación incorrecto");
+				txtNumero.setText(""+aHab.generaCodigo());
+				txtDescripcion.requestFocus();
+			}
+
 		}else mensaje("Llene todos los campos");
 	}
 	

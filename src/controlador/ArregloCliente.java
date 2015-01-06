@@ -14,7 +14,7 @@ public class ArregloCliente {
 	
 	public int generaCodigo(){
 		if(tamaño()==0)
-			return 101;
+			return 1001;
 		else
 			return cli.get(tamaño()-1).getCodCliente()+1;
 	}
