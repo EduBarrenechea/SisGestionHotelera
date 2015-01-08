@@ -92,9 +92,11 @@ public class Menu extends JFrame implements ActionListener {
 		mnReservaYHospedaje.add(mntmIngresoReserva);
 		
 		mntmAnulacionReserva = new JMenuItem("Anulacion");
+		mntmAnulacionReserva.addActionListener(this);
 		mnReservaYHospedaje.add(mntmAnulacionReserva);
 		
 		mntmListadoReserva = new JMenuItem("Listado");
+		mntmListadoReserva.addActionListener(this);
 		mnReservaYHospedaje.add(mntmListadoReserva);
 		
 		mnHospedaje = new JMenu("Hospedaje");
@@ -124,6 +126,12 @@ public class Menu extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == mntmAnulacionReserva) {
+			do_mntmAnulacionReserva_actionPerformed(arg0);
+		}
+		if (arg0.getSource() == mntmListadoReserva) {
+			do_mntmListadoReserva_actionPerformed(arg0);
+		}
 		if (arg0.getSource() == mntmIngresoReserva) {
 			do_mntmIngresoReserva_actionPerformed(arg0);
 		}
@@ -158,5 +166,13 @@ public class Menu extends JFrame implements ActionListener {
 	protected void do_mntmIngresoReserva_actionPerformed(ActionEvent arg0) {
 		IngresoReserva iRes = new IngresoReserva();
 		iRes.setVisible(true);
+	}
+	protected void do_mntmListadoReserva_actionPerformed(ActionEvent arg0) {
+		ListadoReserva lRes = new ListadoReserva();
+		lRes.setVisible(true);
+	}
+	protected void do_mntmAnulacionReserva_actionPerformed(ActionEvent arg0) {
+		AnularReserva aRes = new AnularReserva();
+		aRes.setVisible(true);
 	}
 }

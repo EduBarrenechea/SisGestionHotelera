@@ -50,6 +50,16 @@ public class Reserva {
 	public int getEstadoReserva() {
 		return estadoReserva;
 	}
+	
+	public String getEstado(){
+		String est="" ;
+		switch (estadoReserva) {
+		case 0:est="Iniciada";	break;
+		case 1:est="Anulada";	break;
+		case 2:est="Atendida";	break;
+		}
+		return est;
+	}
 	public void setEstadoReserva(int estadoReserva) {
 		this.estadoReserva = estadoReserva;
 	}
