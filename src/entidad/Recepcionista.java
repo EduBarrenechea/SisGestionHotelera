@@ -7,6 +7,9 @@ package entidad;
 public class Recepcionista {
 	private int codRecepcionista, estadoRecepcionista;
 	private String apellidoRecepcionista,nombreRecepcionista,telefonoRecepcionista;
+	
+	public Recepcionista(){}
+	
 	public Recepcionista(int codRecepcionista, String apellidoRecepcionista,
 			String nombreRecepcionista, String telefonoRecepcionista,
 			int estadoRecepcionista) {

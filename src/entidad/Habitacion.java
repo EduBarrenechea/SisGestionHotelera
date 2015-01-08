@@ -4,6 +4,7 @@ public class Habitacion {
 	private int numHabitacion,tipoHabitacion,ubicacionHabitacion;
 	private String desHabitacion;
 	private double costoHabitacion;
+	public Habitacion(){}
 	public Habitacion(int numHabitacion, String desHabitacion,
 			int tipoHabitacion, int ubicacionHabitacion, double costoHabitacion) {
 		this.numHabitacion = numHabitacion;

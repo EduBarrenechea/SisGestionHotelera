@@ -1,11 +1,13 @@
 package controlador;
 import entidad.Habitacion;
 import java.util.ArrayList;
+import java.io.*;
 public class ArregloHabitacion {
 	private ArrayList<Habitacion> hab;
 	
 	public ArregloHabitacion(){
 		hab = new ArrayList<Habitacion>();
+		cargarArchivo();
 	}
 	
 	public int tamaño(){
@@ -45,7 +47,42 @@ public class ArregloHabitacion {
 				hab.set(i, h);
 	}
 	
-	//public void cargar(){}
+	public void cargarArchivo(){
+		try {
+			FileReader fr = new FileReader("habitacion.txt");
+			BufferedReader br = new BufferedReader(fr);
+			String linea = null;
+			while((linea = br.readLine()) != null){
+				String[] sep = linea.split(",");
+				Habitacion h = new Habitacion();
+				h.setNumHabitacion(Integer.parseInt(sep[0].trim()));
+				h.setDesHabitacion(sep[1].trim());
+				h.setTipoHabitacion(Integer.parseInt(sep[2].trim()));
+				h.setUbicacionHabitacion(Integer.parseInt(sep[3].trim()));
+				h.setCostoHabitacion(Double.parseDouble(sep[4].trim()));
+				hab.add(h);				
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
-	//public void grabar(){}
+	public void grabarArchivo(){
+		try {
+			FileWriter fr = new FileWriter("habitacion.txt");
+			PrintWriter pw = new PrintWriter(fr);
+			for (Habitacion h : hab) {
+				pw.println(
+						h.getNumHabitacion()+","+
+						h.getDesHabitacion()+","+
+						h.getTipoHabitacion()+","+
+						h.getUbicacionHabitacion()+","+
+						h.getCostoHabitacion()
+						);
+			}
+			pw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

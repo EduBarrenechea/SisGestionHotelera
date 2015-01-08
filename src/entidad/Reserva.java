@@ -8,7 +8,8 @@ package entidad;
 public class Reserva {
 	private int codReserva,codCliente,codRecepcionista,numeroHabitacion,estadoReserva;
 	private String fechaRegistroReserva, fechaIngresoReserva,fechaSalidaReserva;
-	public Reserva(int codReserva, int codCliente, int codCajero,
+	public Reserva(){}
+	public Reserva(int codReserva, int codCliente,
 			int codRecepcionista, int numeroHabitacion,
 			String fechaRegistroReserva, String fechaIngresoReserva,
 			String fechaSalidaReserva, int estadoReserva) {

@@ -332,6 +332,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 					aHab.creacion(h);
 					listar();
 					limpiar();
+					aHab.grabarArchivo();
 					txtNumero.setText(""+aHab.generaCodigo());
 					txtDescripcion.requestFocus();
 					}else mensaje("Ingrese correctamente los datos");
@@ -368,6 +369,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				if(h!=null){
 				aHab.modificar(h);
 				listar();
+				aHab.grabarArchivo();
 				}else mensaje("Llene correctamente los campos");
 			}
 		}else mensaje("Llene todos los campos");
@@ -380,6 +382,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				if ( h != null){
 					aHab.eliminar(h);
 					listar();
+					aHab.grabarArchivo();
 				}else mensaje("Código no existe");
 			} catch (Exception e) {
 				mensaje("Llena correctamente el código");

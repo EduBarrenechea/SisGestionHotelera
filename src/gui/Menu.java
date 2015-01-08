@@ -88,6 +88,7 @@ public class Menu extends JFrame implements ActionListener {
 		menuBar.add(mnReservaYHospedaje);
 		
 		mntmIngresoReserva = new JMenuItem("Ingreso");
+		mntmIngresoReserva.addActionListener(this);
 		mnReservaYHospedaje.add(mntmIngresoReserva);
 		
 		mntmAnulacionReserva = new JMenuItem("Anulacion");
@@ -123,6 +124,9 @@ public class Menu extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == mntmIngresoReserva) {
+			do_mntmIngresoReserva_actionPerformed(arg0);
+		}
 		if (arg0.getSource() == mntmRecepcionistaM) {
 			do_mntmRecepcionistaM_actionPerformed(arg0);
 		}
@@ -150,5 +154,9 @@ public class Menu extends JFrame implements ActionListener {
 	protected void do_mntmRecepcionistaM_actionPerformed(ActionEvent arg0) {
 		MantenimientoRecepcionista mRec = new MantenimientoRecepcionista();
 		mRec.setVisible(true);
+	}
+	protected void do_mntmIngresoReserva_actionPerformed(ActionEvent arg0) {
+		IngresoReserva iRes = new IngresoReserva();
+		iRes.setVisible(true);
 	}
 }

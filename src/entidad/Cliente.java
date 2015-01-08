@@ -7,6 +7,9 @@ package entidad;
 public class Cliente {
 	private int codCliente, estadoCliente;
 	private String apellidoCliente,nombreCliente,telefonoCliente;
+	
+	public Cliente(){}
+	
 	public Cliente(int codCliente, String apellidoCliente,
 			String nombreCliente, String telefonoCliente, int estadoCliente) {
 		this.codCliente = codCliente;
