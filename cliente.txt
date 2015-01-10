@@ -3,3 +3,4 @@
 1003,Nicoll,Enrique,5218521,1
 1004,Ryback,Alberto,890123,1
 1005,Ramos,Luis,999012345,1
+1006,fapencio,oscar,99955522,1
