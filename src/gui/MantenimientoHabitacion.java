@@ -158,6 +158,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		contentPanel.add(scrollPane);
 		
 		txtS = new JTextArea();
+		txtS.setEditable(false);
 		scrollPane.setViewportView(txtS);
 		
 		lblParaAyudaColoque = new JLabel("Para ayuda coloque el puntero sobre el elemento");
@@ -196,6 +197,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				txtDescripcion.requestFocus();
 				lblNumero.setVisible(true);
 				txtNumero.setVisible(true);
+				txtNumero.setEditable(false);
 				lblDescripcion.setVisible(true);
 				txtDescripcion.setVisible(true);
 				lblTipo.setVisible(true);
@@ -210,6 +212,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				btnProcesar.setEnabled(true);
 				lblNumero.setVisible(true);
 				txtNumero.setVisible(true);
+				txtNumero.setEditable(true);
 				txtNumero.requestFocus();
 				lblDescripcion.setVisible(false);
 				txtDescripcion.setVisible(false);
@@ -231,6 +234,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				lblNumero.setVisible(true);
 				txtNumero.setVisible(true);
 				txtNumero.requestFocus();
+				txtNumero.setEditable(true);
 				lblDescripcion.setVisible(true);
 				txtDescripcion.setVisible(true);
 				lblTipo.setVisible(true);
@@ -249,6 +253,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				btnProcesar.setEnabled(true);
 				lblNumero.setVisible(true);
 				txtNumero.setVisible(true);
+				txtNumero.setEditable(true);
 				txtNumero.requestFocus();
 				lblDescripcion.setVisible(false);
 				txtDescripcion.setVisible(false);

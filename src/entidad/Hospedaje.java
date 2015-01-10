@@ -10,6 +10,7 @@ package entidad;
 public class Hospedaje {
 	private int codHospedaje,codReserva,codCliente,numHabitacion,codRecepcionista,tipoHospedaje,estadoHospedaje;
 	private String fechaRegistroHospedaje;
+	public Hospedaje(){}
 	public Hospedaje(int codHospedaje, int codReserva, int codCliente,
 			int codHabitacion, int codRecepcionista, int tipoHospedaje,
 			String fechaRegistroHospedaje, int estadoHospedaje) {
