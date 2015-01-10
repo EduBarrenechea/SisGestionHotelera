@@ -72,4 +72,22 @@ public class Hospedaje {
 		this.fechaRegistroHospedaje = fechaRegistroHospedaje;
 	}
 	
+	public String getTipo(){
+		String tipo="";
+		switch (tipoHospedaje) {
+		case 0:	tipo="Con Reserva";break;
+		case 1: tipo="Sin Reserva";break;
+		}
+		return tipo;
+	}
+	
+	public String getEstado(){
+		String est="";
+		switch (estadoHospedaje) {
+		case 0:	est="Anulada";break;
+		case 1: est="Atendida";break;
+		}
+		return est;
+	}
+	
 }

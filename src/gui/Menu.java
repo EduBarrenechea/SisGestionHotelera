@@ -103,12 +103,15 @@ public class Menu extends JFrame implements ActionListener {
 		menuBar.add(mnHospedaje);
 		
 		mntmIngresoHospedaje = new JMenuItem("Ingreso");
+		mntmIngresoHospedaje.addActionListener(this);
 		mnHospedaje.add(mntmIngresoHospedaje);
 		
 		mntmAnulacionHospedaje = new JMenuItem("Anulacion");
+		mntmAnulacionHospedaje.addActionListener(this);
 		mnHospedaje.add(mntmAnulacionHospedaje);
 		
 		mntmListadoHospedaje = new JMenuItem("Listado");
+		mntmListadoHospedaje.addActionListener(this);
 		mnHospedaje.add(mntmListadoHospedaje);
 		
 		mnReportes = new JMenu("Reportes");
@@ -126,6 +129,15 @@ public class Menu extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == mntmAnulacionHospedaje) {
+			do_mntmAnulacionHospedaje_actionPerformed(arg0);
+		}
+		if (arg0.getSource() == mntmListadoHospedaje) {
+			do_mntmListadoHospedaje_actionPerformed(arg0);
+		}
+		if (arg0.getSource() == mntmIngresoHospedaje) {
+			do_mntmIngresoHospedaje_actionPerformed(arg0);
+		}
 		if (arg0.getSource() == mntmAnulacionReserva) {
 			do_mntmAnulacionReserva_actionPerformed(arg0);
 		}
@@ -157,7 +169,7 @@ public class Menu extends JFrame implements ActionListener {
 	}
 	protected void do_mntmClienteM_actionPerformed(ActionEvent arg0) {
 		MantenimientoCliente mCli = new MantenimientoCliente();
-		mCli.setVisible(true);
+mCli.setVisible(true);			
 	}
 	protected void do_mntmRecepcionistaM_actionPerformed(ActionEvent arg0) {
 		MantenimientoRecepcionista mRec = new MantenimientoRecepcionista();
@@ -174,5 +186,17 @@ public class Menu extends JFrame implements ActionListener {
 	protected void do_mntmAnulacionReserva_actionPerformed(ActionEvent arg0) {
 		AnularReserva aRes = new AnularReserva();
 		aRes.setVisible(true);
+	}
+	protected void do_mntmIngresoHospedaje_actionPerformed(ActionEvent arg0) {
+		IngresoHospedaje iHos = new IngresoHospedaje();
+		iHos.setVisible(true);
+	}
+	protected void do_mntmListadoHospedaje_actionPerformed(ActionEvent arg0) {
+		ListadoHospedaje lHos = new ListadoHospedaje();
+		lHos.setVisible(true);
+	}
+	protected void do_mntmAnulacionHospedaje_actionPerformed(ActionEvent arg0) {
+		AnularHospedaje aHos = new AnularHospedaje();
+		aHos.setVisible(true);
 	}
 }

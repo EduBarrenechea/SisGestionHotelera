@@ -11,17 +11,19 @@ import javax.swing.JTextArea;
 
 import entidad.*;
 import controlador.*;
+
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class AnularReserva extends JDialog implements ItemListener, ActionListener {
+public class AnularHospedaje extends JDialog implements ItemListener, ActionListener {
 	
 	ArregloReserva aRes = new ArregloReserva();
 	ArregloCliente aCli = new ArregloCliente();
 	ArregloRecepcionista aRec = new ArregloRecepcionista();
 	ArregloHabitacion aHab = new ArregloHabitacion();
+	ArregloHospedaje aHos = new ArregloHospedaje();
 	private JLabel lblCdigo;
 	private JComboBox cboCodigo;
 	private JButton btnAnular;
@@ -35,7 +37,7 @@ public class AnularReserva extends JDialog implements ItemListener, ActionListen
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AnularReserva dialog = new AnularReserva();
+					AnularHospedaje dialog = new AnularHospedaje();
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 				} catch (Exception e) {
@@ -48,7 +50,8 @@ public class AnularReserva extends JDialog implements ItemListener, ActionListen
 	/**
 	 * Create the dialog.
 	 */
-	public AnularReserva() {
+	public AnularHospedaje() {
+		setTitle("Anular Hospedaje");
 		setBounds(100, 100, 408, 378);
 		getContentPane().setLayout(null);
 		
@@ -74,19 +77,24 @@ public class AnularReserva extends JDialog implements ItemListener, ActionListen
 		
 		txtS = new JTextArea();
 		scrollPane.setViewportView(txtS);	
-		listarReservacion(0);
+		listarHospedaje(0);
 	}
 	
-	void listarReservacion(int pos){
+	void listarHospedaje(int pos){
+		Hospedaje h = aHos.obtener(pos);
 		txtS.setText("");
-		Reserva r = aRes.obtener(pos);
-		imprimir("Codigo:\t"+r.getCodReserva());
-		imprimir("Cliente:\t"+obtenerCliente(r.getCodCliente()));
-		imprimir("Recepcionista:\t"+obtenerRecepcionista(r.getCodRecepcionista()));
-		imprimir("Fecha Registro:\t"+r.getFechaRegistroReserva());
-		imprimir("Fecha Ingreso:\t"+r.getFechaIngresoReserva());
-		imprimir("Fecha Salida:\t"+r.getFechaSalidaReserva());
-		imprimir("Estado:\t"+r.getEstado());
+		String codRe="--";
+		if(h.getCodReserva() != -1)
+			codRe=String.valueOf(h.getCodReserva());		
+		imprimir("Codigo:\t "+ h.getCodHospedaje());
+		imprimir("Reserva:\t"+codRe);
+		imprimir("Cliente:\t"+obtenerCliente(h.getCodCliente()));
+		imprimir("Habitacion:\t"+h.getCodHabitacion());
+		imprimir("Recepcionista:\t"+obtenerRecepcionista(h.getCodRecepcionista()));
+		imprimir("Tipo:\t"+h.getTipo());
+		imprimir("FechaRegistro:\t"+h.getFechaRegistroHospedaje());
+		imprimir("Estado:\t"+h.getEstado());
+		
 	}
 	
 	void imprimir(String cad){
@@ -103,9 +111,9 @@ public class AnularReserva extends JDialog implements ItemListener, ActionListen
 	}
 	
 	void llenarCombo(){
-		for (int i = 0; i < aRes.tamaño(); i++) {
-			Reserva r = aRes.obtener(i);
-			cboCodigo.addItem(r.getCodReserva());			
+		for (int i = 0; i < aHos.tamaño(); i++) {
+			Hospedaje h = aHos.obtener(i);
+			cboCodigo.addItem(h.getCodHospedaje());			
 		}
 	}
 	public void itemStateChanged(ItemEvent arg0) {
@@ -119,7 +127,7 @@ public class AnularReserva extends JDialog implements ItemListener, ActionListen
 	}
 	
 	void seleccionar(){
-		listarReservacion(cboCodigo.getSelectedIndex());
+		listarHospedaje(cboCodigo.getSelectedIndex());
 	}
 	public void actionPerformed(ActionEvent arg0) {
 		if (arg0.getSource() == btnAnular) {
@@ -127,8 +135,8 @@ public class AnularReserva extends JDialog implements ItemListener, ActionListen
 		}
 	}
 	protected void do_btnAnular_actionPerformed(ActionEvent arg0) {
-		aRes.modificar(cboCodigo.getSelectedIndex(),1);
-		aRes.grabarArchivo();
+		aHos.modificar(cboCodigo.getSelectedIndex());
+		aHos.grabarArchivo();
 		seleccionar();
 	}
 }

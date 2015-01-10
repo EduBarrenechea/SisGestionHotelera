@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.io.*;
 
 import entidad.Cliente;
+import entidad.Hospedaje;
 import entidad.Recepcionista;
 import entidad.Reserva;
 
@@ -33,11 +34,33 @@ public class ArregloReserva {
 		return res.get(pos);
 	}
 	
-	public void modificar(Reserva r){
+	/*public void modificar(Reserva r){
 		for (int i = 0; i < tamaño(); i++) {
 			if(res.get(i).getCodReserva() == r.getCodReserva())
 				res.set(i, r);				
 		}
+	}*/
+	
+	public void modificar(int pos,int est){
+		Reserva r = obtener(pos);
+		r.setEstadoReserva(est);
+	}
+	
+	public Reserva buscar(int codReserva){
+		for (Reserva r : res) {
+			if(codReserva == r.getCodReserva())
+				return r;
+		}
+		return null;
+	}
+	
+	public ArrayList<Reserva> reservaxCLiente(int codCli){
+		ArrayList<Reserva> aRes =  new ArrayList<Reserva>();
+		for (Reserva r : res) {
+			if(r.getCodCliente() == codCli)
+				aRes.add(r);
+		}
+		return aRes;
 	}
 	
     public void cargarArchivo(){

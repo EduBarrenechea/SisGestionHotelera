@@ -16,12 +16,13 @@ import controlador.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class ListadoReserva extends JDialog implements ActionListener {
+public class ListadoHospedaje extends JDialog implements ActionListener {
 	
 	ArregloReserva aRes = new ArregloReserva();
 	ArregloCliente aCli = new ArregloCliente();
 	ArregloRecepcionista aRec = new ArregloRecepcionista();
 	ArregloHabitacion aHab = new ArregloHabitacion();
+	ArregloHospedaje aHos = new ArregloHospedaje();
 	DateFormat f = DateFormat.getDateInstance(DateFormat.MEDIUM);
 
 	private final JPanel contentPanel = new JPanel();
@@ -34,7 +35,7 @@ public class ListadoReserva extends JDialog implements ActionListener {
 	 */
 	public static void main(String[] args) {
 		try {
-			ListadoReserva dialog = new ListadoReserva();
+			ListadoHospedaje dialog = new ListadoHospedaje();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -45,8 +46,8 @@ public class ListadoReserva extends JDialog implements ActionListener {
 	/**
 	 * Create the dialog.
 	 */
-	public ListadoReserva() {
-		setTitle("Listado de Reservaciones");
+	public ListadoHospedaje() {
+		setTitle("Listado de Hospedajes");
 		setBounds(100, 100, 765, 421);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -65,22 +66,25 @@ public class ListadoReserva extends JDialog implements ActionListener {
 		txtS.setEditable(false);
 		
 		scrollPane.setViewportView(txtS);
-		listarReservaciones();
+		listarHospedajes();
 	}
 	
-	void listarReservaciones(){
-		imprimir("Codigo\tCliente\tRecepcionista\tHabitacion\tFechaRegistro\tFechaIngreso\tFechaSalida\tEstado");
-		for (int i = 0; i < aRes.tamaño() ; i++) {
-			Reserva r = aRes.obtener(i);
+	void listarHospedajes(){
+		imprimir("Codigo\tReserva\tCliente\tHabitacion\tRecepcionista\tTipo\tFechaRegistro\tEstado");
+		for (int i = 0; i < aHos.tamaño() ; i++) {
+			Hospedaje h = aHos.obtener(i);
+			String codRe="--";
+			if(h.getCodReserva() != -1)
+				codRe=String.valueOf(h.getCodReserva());
 			imprimir(
-					rellenar(String.valueOf(r.getCodReserva()))+"\t"+
-					rellenar(obtenerCliente(r.getCodCliente()))+"\t"+
-					rellenar(obtenerRecepcionista(r.getCodRecepcionista()))+"\t"+
-					rellenar(String.valueOf(r.getNumeroHabitacion()))+"\t"+
-					rellenar(r.getFechaRegistroReserva())+"\t"+
-					rellenar(r.getFechaIngresoReserva())+"\t"+
-					rellenar(r.getFechaSalidaReserva())+"\t"+
-					r.getEstado()
+					rellenar(String.valueOf(h.getCodHospedaje()))+"\t"+
+					rellenar(codRe)+"\t"+
+					rellenar(obtenerCliente(h.getCodCliente()))+"\t"+
+					rellenar(String.valueOf(h.getCodHabitacion()))+"\t"+
+					rellenar(obtenerRecepcionista(h.getCodRecepcionista()))+"\t"+
+					rellenar(h.getTipo())+"\t"+
+					rellenar(h.getFechaRegistroHospedaje())+"\t"+
+					rellenar(h.getEstado())
 					);
 		}
 	}
@@ -88,10 +92,10 @@ public class ListadoReserva extends JDialog implements ActionListener {
 		txtS.append(cad + "\n");
 	}
 	
-	String rellenar(String cad){
+String rellenar(String cad){		 
 		int longitud=cad.length();
 		for(int i=longitud; i<10; i++)
-			cad+=' ';
+			cad+=' '; 
 		return cad;
 	}
 	
@@ -104,12 +108,12 @@ public class ListadoReserva extends JDialog implements ActionListener {
 	}
 	
 	
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnSalir) {
-			do_btnSalir_actionPerformed(e);
+	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnSalir) {
+			do_btnSalir_actionPerformed(arg0);
 		}
 	}
-	protected void do_btnSalir_actionPerformed(ActionEvent e) {
+	protected void do_btnSalir_actionPerformed(ActionEvent arg0) {
 		this.dispose();
 	}
 }

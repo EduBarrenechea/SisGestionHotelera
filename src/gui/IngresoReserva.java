@@ -94,6 +94,7 @@ public class IngresoReserva extends JDialog implements ActionListener {
 		txtCodigo.setBounds(134, 11, 86, 20);
 		getContentPane().add(txtCodigo);
 		txtCodigo.setText(""+aRes.generaCodigo());
+		txtCodigo.setEditable(false);
 		txtCodigo.setColumns(10);
 		
 		cboCliente = new JComboBox();

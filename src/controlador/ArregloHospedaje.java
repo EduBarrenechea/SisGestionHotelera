@@ -67,9 +67,11 @@ public class ArregloHospedaje {
 						h.getFechaRegistroHospedaje()+","+
 						h.getEstadoHospedaje()
 						);
+				
 			}
+			pw.close();
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 }
