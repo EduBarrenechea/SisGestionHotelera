@@ -24,19 +24,25 @@ import entidad.Habitacion;
 import controlador.ArregloHabitacion;
 import java.text.DecimalFormat;
 import java.awt.Color;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
-public class MantenimientoHabitacion extends JDialog implements ItemListener, ActionListener {
+public class MantenimientoHabitacion extends JDialog implements ItemListener, ActionListener, KeyListener {
 
 	private final JPanel contentPanel = new JPanel();
 	private JLabel lblOpcion,lblNumero,lblDescripcion,lblTipo,lblUbicacion,lblCosto;
 	private JComboBox cboOpcion,cboTipo;
-	private JTextField txtNumero,txtDescripcion,txtUbicacion,txtCosto;
+	private JTextField txtNumero,txtDescripcion,txtCosto;
 	private JButton btnProcesar,btnLimpiar;
 	private JScrollPane scrollPane;
 	private JTextArea txtS;
 	ArregloHabitacion aHab = new ArregloHabitacion();
 	DecimalFormat sdf= new DecimalFormat("#,###.00");
 	private JLabel lblParaAyudaColoque;
+	private JLabel lblEstado;
+	private JComboBox cboEstado;
+	private JComboBox cboUbicacion;
+	private JButton btnCerrar;
 	/**
 	 * Launch the application.
 	 */
@@ -55,7 +61,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	 */
 	public MantenimientoHabitacion() {
 		setTitle("Mantenimiento de Habitaci\u00F3n");
-		setBounds(100, 100, 513, 499);
+		setBounds(100, 100, 551, 540);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -83,6 +89,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		lblNumero.setVisible(false);
 		
 		txtNumero = new JTextField();
+		txtNumero.addKeyListener(this);
 		txtNumero.setToolTipText("Ingrese Numero de Habitaci\u00F3n");
 		txtNumero.setBounds(105, 33, 86, 20);
 		contentPanel.add(txtNumero);
@@ -121,13 +128,6 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		contentPanel.add(lblUbicacion);
 		lblUbicacion.setVisible(false);
 		
-		txtUbicacion = new JTextField();
-		txtUbicacion.setToolTipText("Ingrese en n\u00FAmeros");
-		txtUbicacion.setBounds(105, 108, 86, 20);
-		contentPanel.add(txtUbicacion);
-		txtUbicacion.setColumns(10);
-		txtUbicacion.setVisible(false);
-		
 		lblCosto = new JLabel("Costo :");
 		lblCosto.setBounds(10, 136, 46, 14);
 		contentPanel.add(lblCosto);
@@ -154,7 +154,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		contentPanel.add(btnLimpiar);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 159, 477, 290);
+		scrollPane.setBounds(10, 200, 511, 290);
 		contentPanel.add(scrollPane);
 		
 		txtS = new JTextArea();
@@ -165,6 +165,34 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		lblParaAyudaColoque.setForeground(Color.BLUE);
 		lblParaAyudaColoque.setBounds(201, 136, 312, 14);
 		contentPanel.add(lblParaAyudaColoque);
+		
+		lblEstado = new JLabel("Estado :");
+		lblEstado.setBounds(10, 161, 46, 14);
+		lblEstado.setVisible(false);
+		contentPanel.add(lblEstado);
+		
+		cboEstado = new JComboBox();
+		cboEstado.setBounds(105, 158, 118, 20);
+		cboEstado.addItem("--Seleccione--");
+		cboEstado.addItem("Disponible");
+		cboEstado.addItem("Resarvada");
+		cboEstado.addItem("Ocupada");
+		cboEstado.setVisible(false);
+		contentPanel.add(cboEstado);
+		
+		cboUbicacion = new JComboBox();
+		cboUbicacion.setBounds(105, 108, 118, 20);
+		cboUbicacion.addItem("-- Seleccione --");
+		cboUbicacion.addItem("Edificio A");
+		cboUbicacion.addItem("Edificio B");
+		cboUbicacion.addItem("Edificio C");
+		cboUbicacion.setVisible(false);
+		contentPanel.add(cboUbicacion);
+		
+		btnCerrar = new JButton("Cerrar");
+		btnCerrar.addActionListener(this);
+		btnCerrar.setBounds(363, 57, 89, 23);
+		contentPanel.add(btnCerrar);
 		
 
 	}
@@ -187,9 +215,11 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 			lblTipo.setVisible(false);
 			cboTipo.setVisible(false);
 			lblUbicacion.setVisible(false);
-			txtUbicacion.setVisible(false);
+			cboUbicacion.setVisible(false);
 			lblCosto.setVisible(false);
-			txtCosto.setVisible(false);				
+			txtCosto.setVisible(false);
+			cboEstado.setVisible(false);
+			lblEstado.setVisible(false);
 			break;
 	
 		case 1:
@@ -203,10 +233,12 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				lblTipo.setVisible(true);
 				cboTipo.setVisible(true);
 				lblUbicacion.setVisible(true);
-				txtUbicacion.setVisible(true);
+				cboUbicacion.setVisible(true);
 				lblCosto.setVisible(true);
 				txtCosto.setVisible(true);
 				txtNumero.setText(""+aHab.generaCodigo());
+				lblEstado.setVisible(false);
+				cboEstado.setVisible(false);
 				break;
 		case 2:
 				btnProcesar.setEnabled(true);
@@ -219,9 +251,11 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				lblTipo.setVisible(false);
 				cboTipo.setVisible(false);
 				lblUbicacion.setVisible(false);
-				txtUbicacion.setVisible(false);
+				cboUbicacion.setVisible(false);
 				lblCosto.setVisible(false);
 				txtCosto.setVisible(false);
+				cboEstado.setVisible(false);
+				lblEstado.setVisible(false);
 				if(aHab.tamaño()>0){
 					listar();
 					btnProcesar.setEnabled(true);
@@ -240,9 +274,11 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				lblTipo.setVisible(true);
 				cboTipo.setVisible(true);
 				lblUbicacion.setVisible(true);
-				txtUbicacion.setVisible(true);
+				cboUbicacion.setVisible(true);
 				lblCosto.setVisible(true);
 				txtCosto.setVisible(true);
+				cboEstado.setVisible(true);
+				lblEstado.setVisible(true);
 				if(aHab.tamaño()>0){
 					btnProcesar.setEnabled(true);
 				}else{
@@ -260,9 +296,11 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				lblTipo.setVisible(false);
 				cboTipo.setVisible(false);
 				lblUbicacion.setVisible(false);
-				txtUbicacion.setVisible(false);
+				cboUbicacion.setVisible(false);
 				lblCosto.setVisible(false);
 				txtCosto.setVisible(false);
+				cboEstado.setVisible(false);
+				lblEstado.setVisible(false);
 				if(aHab.tamaño()>0){
 					listar();
 					btnProcesar.setEnabled(true);
@@ -279,14 +317,19 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				lblTipo.setVisible(false);
 				cboTipo.setVisible(false);
 				lblUbicacion.setVisible(false);
-				txtUbicacion.setVisible(false);
+				cboUbicacion.setVisible(false);
 				lblCosto.setVisible(false);
-				txtCosto.setVisible(false);				
+				txtCosto.setVisible(false);
+				cboEstado.setVisible(false);
+				lblEstado.setVisible(false);
 				break;
 		}
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnCerrar) {
+			do_btnCerrar_actionPerformed(arg0);
+		}
 		if (arg0.getSource() == btnProcesar) {
 			do_btnProcesar_actionPerformed(arg0);
 		}
@@ -301,7 +344,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		txtNumero.setText("");
 		txtDescripcion.setText("");
 		cboTipo.setSelectedItem(0);
-		txtUbicacion.setText("");
+		cboUbicacion.setSelectedIndex(0);
 		txtCosto.setText("");
 		txtNumero.requestFocus();
 	}
@@ -322,8 +365,9 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	int getNumero(){return Integer.parseInt(txtNumero.getText());}
 	String getDescripcion(){return txtDescripcion.getText();}
 	int getTipo(){return cboTipo.getSelectedIndex();}
-	int getUbicacion(){return Integer.parseInt(txtUbicacion.getText());}
+	int getUbicacion(){return cboUbicacion.getSelectedIndex();}
 	double getCosto(){return Double.parseDouble(txtCosto.getText());}
+	int getEstado(){return cboEstado.getSelectedIndex();}
 	
 	void ingresar(){
 		int num;
@@ -398,14 +442,16 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	
 	void listar(){
 		txtS.setText("");
-		imprimir("Número\tDescripcion\tTipo\tUbicación\tCosto");
+		imprimir("Número\tDescripcion\tTipo\tUbicación\tCosto\tEstado");
 		for (int i = 0; i < aHab.tamaño(); i++) {
 			Habitacion h = aHab.obtener(i);
 			imprimir(rellenar(String.valueOf(h.getNumHabitacion()))+"\t"+
 					 rellenar(h.getDesHabitacion())+"\t"+
 					 rellenar(h.getTipo())+"\t"+
-					 rellenar(String.valueOf(h.getUbicacionHabitacion()))+"\t"+
-					 sdf.format((h.getCostoHabitacion())));
+					 rellenar(h.getUbicacion())+"\t"+
+					 rellenar(String.valueOf(sdf.format((h.getCostoHabitacion()))))+"\t"+
+					 h.getEstado()
+					);
 		}
 	}
 	
@@ -415,8 +461,9 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		imprimir("Número\t:  "+String.valueOf(h.getNumHabitacion()));
 		imprimir("Descripción\t:  "+(h.getDesHabitacion()));
 		imprimir("Tipo\t:  "+(h.getTipo()));
-		imprimir("Ubicación\t:  "+(String.valueOf(h.getUbicacionHabitacion())));
+		imprimir("Ubicación\t:  "+ h.getUbicacion());
 		imprimir("Costo\t:  "+sdf.format((h.getCostoHabitacion())));
+		imprimir("Estado\t:"+h.getEstado());
 		
 	}
 	
@@ -436,7 +483,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	}
 	
 	boolean validarVacio(){
-		if(!txtNumero.getText().isEmpty() && !txtDescripcion.getText().isEmpty() && cboTipo.getSelectedIndex()>0 && !txtUbicacion.getText().isEmpty() && !txtCosto.getText().isEmpty())
+		if(!txtNumero.getText().isEmpty() && !txtDescripcion.getText().isEmpty() && cboTipo.getSelectedIndex()>0 && cboUbicacion.getSelectedIndex()>0 && !txtCosto.getText().isEmpty())
 			return true;
 		return false;
 	}
@@ -444,10 +491,26 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	Habitacion validarDatos(){
 		Habitacion h = null;
 		try {
-			h= new Habitacion(getNumero(), getDescripcion(), getTipo(), getUbicacion(), getCosto());			
+			h= new Habitacion(getNumero(), getDescripcion(), getTipo(), getUbicacion(), getCosto(),getEstado());			
 		} catch (Exception e) {
 			
 		}
 		return h;
+	}
+	protected void do_btnCerrar_actionPerformed(ActionEvent arg0) {
+		this.dispose();
+	}
+	public void keyPressed(KeyEvent e) {
+	}
+	public void keyReleased(KeyEvent e) {
+	}
+	public void keyTyped(KeyEvent e) {
+		if (e.getSource() == txtNumero) {
+			do_txtNumero_keyTyped(e);
+		}
+	}
+	protected void do_txtNumero_keyTyped(KeyEvent e) {
+		char car = e.getKeyChar();
+		if((car<'0' || car>'9'))e.consume();
 	}
 }

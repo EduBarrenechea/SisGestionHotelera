@@ -23,9 +23,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import entidad.Recepcionista;
-import controlador.ArregloRecepcionista;;
+import controlador.ArregloRecepcionista;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;;
 
-public class MantenimientoRecepcionista extends JDialog implements ItemListener, ActionListener {
+public class MantenimientoRecepcionista extends JDialog implements ItemListener, ActionListener, KeyListener {
 
 	ArregloRecepcionista aRec = new ArregloRecepcionista();
 	private final JPanel contentPanel = new JPanel();
@@ -36,6 +38,8 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 	private JLabel label;
 	private JScrollPane scrollPane;
 	private JTextArea txtS;
+	private JButton btnBuscar;
+	private JButton btnCerrar;
 
 	/**
 	 * Launch the application.
@@ -100,6 +104,7 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 		contentPanel.add(lblEstado);
 		
 		txtCodigo = new JTextField();
+		txtCodigo.addKeyListener(this);
 		txtCodigo.setToolTipText("Ingrese codigo en numeros");
 		txtCodigo.setBounds(105, 33, 86, 20);
 		contentPanel.add(txtCodigo);
@@ -166,6 +171,17 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 		lblEstado.setVisible(false);
 		cboEstado.setVisible(false);
 		btnProcesar.setEnabled(false);
+		
+		btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener(this);
+		btnBuscar.setBounds(201, 32, 89, 23);
+		btnBuscar.setVisible(false);
+		contentPanel.add(btnBuscar);
+		
+		btnCerrar = new JButton("Cerrar");
+		btnCerrar.addActionListener(this);
+		btnCerrar.setBounds(371, 61, 89, 23);
+		contentPanel.add(btnCerrar);
 	}
 	public void itemStateChanged(ItemEvent arg0) {
 		if (arg0.getSource() == cboOpcion) {
@@ -190,6 +206,7 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 			lblEstado.setVisible(false);
 			cboEstado.setVisible(false);
 			btnProcesar.setEnabled(false);
+			btnBuscar.setVisible(false);
 			break;
 		case 1:
 			btnProcesar.setEnabled(true);
@@ -206,6 +223,7 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 			cboEstado.setVisible(false);
 			txtCodigo.setText(""+aRec.generaCodigo());
 			txtApellido.requestFocus();
+			btnBuscar.setVisible(false);
 			break;
 		case 2:
 			btnProcesar.setEnabled(true);
@@ -220,6 +238,7 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 			txtTelefono.setVisible(false);
 			lblEstado.setVisible(false);
 			cboEstado.setVisible(false);
+			btnBuscar.setVisible(false);
 			if(aRec.tamaño()>0){
 				listar();
 				btnProcesar.setEnabled(true);
@@ -241,6 +260,7 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 			lblEstado.setVisible(true);
 			cboEstado.setVisible(true);	
 			cboEstado.setSelectedIndex(1);
+			btnBuscar.setVisible(true);
 			if(aRec.tamaño()>0){
 				btnProcesar.setEnabled(true);
 			}else{
@@ -260,6 +280,7 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 			txtTelefono.setVisible(false);
 			lblEstado.setVisible(false);
 			cboEstado.setVisible(false);
+			btnBuscar.setVisible(false);
 			if(aRec.tamaño()>0){
 				listar();
 				btnProcesar.setEnabled(true);
@@ -279,6 +300,7 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 			lblEstado.setVisible(false);
 			cboEstado.setVisible(false);
 			btnProcesar.setEnabled(true);
+			btnBuscar.setVisible(false);
 			break;
 		
 		}		
@@ -294,6 +316,12 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnCerrar) {
+			do_btnCerrar_actionPerformed(arg0);
+		}
+		if (arg0.getSource() == btnBuscar) {
+			do_btnBuscar_actionPerformed(arg0);
+		}
 		if (arg0.getSource() == btnProcesar) {
 			do_btnProcesar_actionPerformed(arg0);
 		}
@@ -435,5 +463,40 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 	
 	void mensaje(String m) {
 		JOptionPane.showMessageDialog(this,m);
+	}
+	protected void do_btnBuscar_actionPerformed(ActionEvent arg0) {
+		buscarData();
+	}
+	void buscarData(){
+		if(!txtCodigo.getText().isEmpty()){
+			try {
+				Recepcionista r = aRec.buscar(getCodigo());
+				if(r != null){
+					txtApellido.setText(r.getApellidoRecepcionista());
+					txtNombre.setText(r.getNombreRecepcionista());
+					txtTelefono.setText(r.getTelefonoRecepcionista());
+					cboEstado.setSelectedIndex(r.getEstadoRecepcionista());
+				}else 
+					mensaje("No hay Recepcionista con ese código");
+			} catch (Exception e) {
+				mensaje("Llena correctamente el código");
+			}
+		}else mensaje("Ingrese código");
+	}
+	protected void do_btnCerrar_actionPerformed(ActionEvent arg0) {
+		this.dispose();
+	}
+	public void keyPressed(KeyEvent e) {
+	}
+	public void keyReleased(KeyEvent e) {
+	}
+	public void keyTyped(KeyEvent e) {
+		if (e.getSource() == txtCodigo) {
+			do_txtCodigo_keyTyped(e);
+		}
+	}
+	protected void do_txtCodigo_keyTyped(KeyEvent e) {
+		char car = e.getKeyChar();
+		if((car<'0' || car>'9'))e.consume();
 	}
 }

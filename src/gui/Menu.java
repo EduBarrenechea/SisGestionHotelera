@@ -165,38 +165,47 @@ public class Menu extends JFrame implements ActionListener {
 	}
 	protected void do_mntmHabitacionM_actionPerformed(ActionEvent arg0) {
 		MantenimientoHabitacion mHab = new MantenimientoHabitacion();
+		mHab.setModal(true);
 		mHab.setVisible(true);
 	}
 	protected void do_mntmClienteM_actionPerformed(ActionEvent arg0) {
 		MantenimientoCliente mCli = new MantenimientoCliente();
-mCli.setVisible(true);			
+		mCli.setModal(true);
+		mCli.setVisible(true);			
 	}
 	protected void do_mntmRecepcionistaM_actionPerformed(ActionEvent arg0) {
 		MantenimientoRecepcionista mRec = new MantenimientoRecepcionista();
+		mRec.setModal(true);
 		mRec.setVisible(true);
 	}
 	protected void do_mntmIngresoReserva_actionPerformed(ActionEvent arg0) {
 		IngresoReserva iRes = new IngresoReserva();
+		iRes.setModal(true);
 		iRes.setVisible(true);
 	}
 	protected void do_mntmListadoReserva_actionPerformed(ActionEvent arg0) {
 		ListadoReserva lRes = new ListadoReserva();
+		lRes.setModal(true);
 		lRes.setVisible(true);
 	}
 	protected void do_mntmAnulacionReserva_actionPerformed(ActionEvent arg0) {
 		AnularReserva aRes = new AnularReserva();
+		aRes.setModal(true);
 		aRes.setVisible(true);
 	}
 	protected void do_mntmIngresoHospedaje_actionPerformed(ActionEvent arg0) {
 		IngresoHospedaje iHos = new IngresoHospedaje();
+		iHos.setModal(true);
 		iHos.setVisible(true);
 	}
 	protected void do_mntmListadoHospedaje_actionPerformed(ActionEvent arg0) {
 		ListadoHospedaje lHos = new ListadoHospedaje();
+		lHos.setModal(true);
 		lHos.setVisible(true);
 	}
 	protected void do_mntmAnulacionHospedaje_actionPerformed(ActionEvent arg0) {
 		AnularHospedaje aHos = new AnularHospedaje();
+		aHos.setModal(true);
 		aHos.setVisible(true);
 	}
 }

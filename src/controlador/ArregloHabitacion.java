@@ -41,6 +41,18 @@ public class ArregloHabitacion {
 		return null;
 	}
 	
+	public void cambioEstado(int numHabitacion, int est){
+		Habitacion h = buscar(numHabitacion);
+		h.setEstadoHabitacion(est);
+		for (int i = 0; i < tamaño() ; i++) {
+			if(hab.get(i).getNumHabitacion() == h.getNumHabitacion())
+				hab.set(i,h);
+		}
+		
+		
+		
+	}
+	
 	public void modificar(Habitacion h){
 		for(int i = 0; i < tamaño() ; i ++)
 			if(hab.get(i).getNumHabitacion() == h.getNumHabitacion())
@@ -60,6 +72,7 @@ public class ArregloHabitacion {
 				h.setTipoHabitacion(Integer.parseInt(sep[2].trim()));
 				h.setUbicacionHabitacion(Integer.parseInt(sep[3].trim()));
 				h.setCostoHabitacion(Double.parseDouble(sep[4].trim()));
+				h.setEstadoHabitacion(Integer.parseInt(sep[5].trim()));
 				hab.add(h);				
 			}			
 		} catch (Exception e) {
@@ -77,7 +90,8 @@ public class ArregloHabitacion {
 						h.getDesHabitacion()+","+
 						h.getTipoHabitacion()+","+
 						h.getUbicacionHabitacion()+","+
-						h.getCostoHabitacion()
+						h.getCostoHabitacion()+","+
+						h.getEstadoHabitacion()
 						);
 			}
 			pw.close();

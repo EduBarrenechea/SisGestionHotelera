@@ -24,8 +24,10 @@ import java.awt.event.ActionEvent;
 
 import entidad.Cliente;
 import controlador.ArregloCliente;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
-public class MantenimientoCliente extends JDialog implements ItemListener, ActionListener {
+public class MantenimientoCliente extends JDialog implements ItemListener, ActionListener, KeyListener {
 
 	ArregloCliente aCli = new ArregloCliente();
 	private final JPanel contentPanel = new JPanel();
@@ -36,6 +38,8 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 	private JLabel label;
 	private JScrollPane scrollPane;
 	private JTextArea txtS;
+	private JButton btnCerrar;
+	private JButton btnBuscar;
 
 	/**
 	 * Launch the application.
@@ -100,6 +104,7 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 		contentPanel.add(lblEstado);
 		
 		txtCodigo = new JTextField();
+		txtCodigo.addKeyListener(this);
 		txtCodigo.setToolTipText("Ingrese codigo en numeros");
 		txtCodigo.setBounds(105, 33, 86, 20);
 		contentPanel.add(txtCodigo);
@@ -166,6 +171,18 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 		lblEstado.setVisible(false);
 		cboEstado.setVisible(false);
 		btnProcesar.setEnabled(false);
+		
+		btnCerrar = new JButton("Cerrar");
+		btnCerrar.addActionListener(this);
+		btnCerrar.setToolTipText("Cerrar Ventana");
+		btnCerrar.setBounds(371, 61, 89, 23);
+		contentPanel.add(btnCerrar);
+		
+		btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener(this);
+		btnBuscar.setBounds(201, 32, 85, 23);
+		btnBuscar.setVisible(false);
+		contentPanel.add(btnBuscar);
 	}
 	public void itemStateChanged(ItemEvent arg0) {
 		if (arg0.getSource() == cboOpcion) {
@@ -190,6 +207,7 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 			lblEstado.setVisible(false);
 			cboEstado.setVisible(false);
 			btnProcesar.setEnabled(false);
+			btnBuscar.setVisible(false);
 			break;
 		case 1:
 			btnProcesar.setEnabled(true);
@@ -206,6 +224,7 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 			cboEstado.setVisible(false);
 			txtCodigo.setText(""+aCli.generaCodigo());
 			txtApellido.requestFocus();
+			btnBuscar.setVisible(false);
 			break;
 		case 2:
 			btnProcesar.setEnabled(true);
@@ -220,6 +239,7 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 			txtTelefono.setVisible(false);
 			lblEstado.setVisible(false);
 			cboEstado.setVisible(false);
+			btnBuscar.setVisible(false);
 			if(aCli.tamaño()>0){
 				listar();
 				btnProcesar.setEnabled(true);
@@ -241,6 +261,7 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 			lblEstado.setVisible(true);
 			cboEstado.setVisible(true);	
 			cboEstado.setSelectedIndex(1);
+			btnBuscar.setVisible(true);
 			if(aCli.tamaño()>0){
 				btnProcesar.setEnabled(true);
 			}else{
@@ -260,6 +281,7 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 			txtTelefono.setVisible(false);
 			lblEstado.setVisible(false);
 			cboEstado.setVisible(false);
+			btnBuscar.setVisible(false);
 			if(aCli.tamaño()>0){
 				listar();
 				btnProcesar.setEnabled(true);
@@ -279,6 +301,7 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 			lblEstado.setVisible(false);
 			cboEstado.setVisible(false);
 			btnProcesar.setEnabled(true);
+			btnBuscar.setVisible(false);
 			break;
 		
 		}		
@@ -294,6 +317,12 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnBuscar) {
+			do_btnBuscar_actionPerformed(arg0);
+		}
+		if (arg0.getSource() == btnCerrar) {
+			do_btnCerrar_actionPerformed(arg0);
+		}
 		if (arg0.getSource() == btnProcesar) {
 			do_btnProcesar_actionPerformed(arg0);
 		}
@@ -435,5 +464,40 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 	
 	void mensaje(String m) {
 		JOptionPane.showMessageDialog(this,m);
+	}
+	protected void do_btnCerrar_actionPerformed(ActionEvent arg0) {
+		this.dispose();
+	}
+	protected void do_btnBuscar_actionPerformed(ActionEvent arg0) {
+		buscarData();
+	}
+	
+	void buscarData(){
+		if(!txtCodigo.getText().isEmpty()){
+			try {
+				Cliente c = aCli.buscar(getCodigo());
+				if(c!=null){
+					txtApellido.setText(c.getApellidoCliente());
+					txtNombre.setText(c.getNombreCliente());
+					txtTelefono.setText(c.getTelefonoCliente());
+					cboEstado.setSelectedIndex(c.getEstadoCliente());
+				} else mensaje("No existe codigo");
+			} catch (Exception e) {
+				mensaje("Llene correctamento el codigo");
+			}
+		} else mensaje("Ingrese código");
+	}
+	public void keyPressed(KeyEvent arg0) {
+	}
+	public void keyReleased(KeyEvent arg0) {
+	}
+	public void keyTyped(KeyEvent arg0) {
+		if (arg0.getSource() == txtCodigo) {
+			do_txtCodigo_keyTyped(arg0);
+		}
+	}
+	protected void do_txtCodigo_keyTyped(KeyEvent arg0) {
+		char car = arg0.getKeyChar();
+		if((car<'0' || car>'9'))arg0.consume();
 	}
 }

@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JFormattedTextField;
 
+
 public class IngresoReserva extends JDialog implements ActionListener {
 	ArregloReserva aRes = new ArregloReserva();
 	ArregloCliente aCli = new ArregloCliente();
