@@ -26,6 +26,7 @@ import java.text.DecimalFormat;
 import java.awt.Color;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import javax.swing.JTable;
 
 public class MantenimientoHabitacion extends JDialog implements ItemListener, ActionListener, KeyListener {
 
@@ -34,8 +35,6 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	private JComboBox cboOpcion,cboTipo;
 	private JTextField txtNumero,txtDescripcion,txtCosto;
 	private JButton btnProcesar,btnLimpiar;
-	private JScrollPane scrollPane;
-	private JTextArea txtS;
 	ArregloHabitacion aHab = new ArregloHabitacion();
 	DecimalFormat sdf= new DecimalFormat("#,###.00");
 	private JLabel lblParaAyudaColoque;
@@ -43,6 +42,9 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	private JComboBox cboEstado;
 	private JComboBox cboUbicacion;
 	private JButton btnCerrar;
+	private JScrollPane scrollPane_1;
+	private JTable tHabitacion;
+	private JButton btnBuscar;
 	/**
 	 * Launch the application.
 	 */
@@ -60,6 +62,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	 * Create the dialog.
 	 */
 	public MantenimientoHabitacion() {
+		setResizable(false);
 		setTitle("Mantenimiento de Habitaci\u00F3n");
 		setBounds(100, 100, 551, 540);
 		getContentPane().setLayout(new BorderLayout());
@@ -134,6 +137,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		lblCosto.setVisible(false);		
 		
 		txtCosto = new JTextField();
+		txtCosto.addKeyListener(this);
 		txtCosto.setToolTipText("Ingrese en decimal");
 		txtCosto.setBounds(105, 133, 86, 20);
 		contentPanel.add(txtCosto);
@@ -153,14 +157,6 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		btnLimpiar.setBounds(363, 32, 89, 23);
 		contentPanel.add(btnLimpiar);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 200, 511, 290);
-		contentPanel.add(scrollPane);
-		
-		txtS = new JTextArea();
-		txtS.setEditable(false);
-		scrollPane.setViewportView(txtS);
-		
 		lblParaAyudaColoque = new JLabel("Para ayuda coloque el puntero sobre el elemento");
 		lblParaAyudaColoque.setForeground(Color.BLUE);
 		lblParaAyudaColoque.setBounds(201, 136, 312, 14);
@@ -174,8 +170,8 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		cboEstado = new JComboBox();
 		cboEstado.setBounds(105, 158, 118, 20);
 		cboEstado.addItem("--Seleccione--");
-		cboEstado.addItem("Disponible");
-		cboEstado.addItem("Resarvada");
+		cboEstado.addItem("Disponible"); 
+		cboEstado.addItem("Reservada");
 		cboEstado.addItem("Ocupada");
 		cboEstado.setVisible(false);
 		contentPanel.add(cboEstado);
@@ -193,6 +189,19 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		btnCerrar.addActionListener(this);
 		btnCerrar.setBounds(363, 57, 89, 23);
 		contentPanel.add(btnCerrar);
+		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 186, 515, 304);
+		contentPanel.add(scrollPane_1);
+		
+		btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener(this);
+		btnBuscar.setBounds(200, 32, 76, 23);
+		btnBuscar.setVisible(false);
+		contentPanel.add(btnBuscar);
+		
+		tHabitacion = new JTable();
+		
 		
 
 	}
@@ -220,6 +229,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 			txtCosto.setVisible(false);
 			cboEstado.setVisible(false);
 			lblEstado.setVisible(false);
+			btnBuscar.setVisible(false);
 			break;
 	
 		case 1:
@@ -239,6 +249,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				txtNumero.setText(""+aHab.generaCodigo());
 				lblEstado.setVisible(false);
 				cboEstado.setVisible(false);
+				btnBuscar.setVisible(false);
 				break;
 		case 2:
 				btnProcesar.setEnabled(true);
@@ -256,8 +267,9 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				txtCosto.setVisible(false);
 				cboEstado.setVisible(false);
 				lblEstado.setVisible(false);
+				btnBuscar.setVisible(false);
 				if(aHab.tamaño()>0){
-					listar();
+					llenarTabla();
 					btnProcesar.setEnabled(true);
 				}else{
 					btnProcesar.setEnabled(false);
@@ -279,7 +291,9 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				txtCosto.setVisible(true);
 				cboEstado.setVisible(true);
 				lblEstado.setVisible(true);
+				btnBuscar.setVisible(true);
 				if(aHab.tamaño()>0){
+					llenarTabla();
 					btnProcesar.setEnabled(true);
 				}else{
 					btnProcesar.setEnabled(false);
@@ -301,8 +315,9 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				txtCosto.setVisible(false);
 				cboEstado.setVisible(false);
 				lblEstado.setVisible(false);
+				btnBuscar.setVisible(false);
 				if(aHab.tamaño()>0){
-					listar();
+					llenarTabla();
 					btnProcesar.setEnabled(true);
 				}else{
 					btnProcesar.setEnabled(false);
@@ -322,11 +337,15 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				txtCosto.setVisible(false);
 				cboEstado.setVisible(false);
 				lblEstado.setVisible(false);
+				btnBuscar.setVisible(false);
 				break;
 		}
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnBuscar) {
+			do_btnBuscar_actionPerformed(arg0);
+		}
 		if (arg0.getSource() == btnCerrar) {
 			do_btnCerrar_actionPerformed(arg0);
 		}
@@ -358,7 +377,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 			case 2 : buscar(); break;				
 			case 3 : actualizar();break;			
 			case 4 : eliminar(); break;				
-			case 5 : listar(); break;			
+			case 5 : llenarTabla(); break;			
 		}
 	}
 	
@@ -370,24 +389,16 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	int getEstado(){return cboEstado.getSelectedIndex();}
 	
 	void ingresar(){
-		int num;
+		
 		if(validarVacio()){
 			try {
-				num = getNumero();
-				Habitacion h = aHab.buscar(num);
-				if(h==null){
-					h = validarDatos();
-					if(h!=null){
+					Habitacion h = new Habitacion(aHab.generaCodigo(), getDescripcion(), getTipo(), getUbicacion(), getCosto(), 1);
 					aHab.creacion(h);
-					listar();
+					llenarTabla();
 					limpiar();
 					aHab.grabarArchivo();
 					txtNumero.setText(""+aHab.generaCodigo());
-					txtDescripcion.requestFocus();
-					}else mensaje("Ingrese correctamente los datos");
-				}
-				else 
-					mensaje("Código ya existe, intente con otro");
+					txtDescripcion.requestFocus();				
 			} catch (Exception e) {
 				mensaje("Número de Habitación incorrecto");
 				txtNumero.setText(""+aHab.generaCodigo());
@@ -402,7 +413,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 			try {
 				Habitacion h = aHab.buscar(getNumero());
 				if(h != null)
-					listar(h);			
+					llenarTabla(h);			
 				else 
 					mensaje("No hay habitación con ese código");
 			} catch (Exception e) {
@@ -412,15 +423,10 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	}
 	void actualizar(){
 		if(validarVacio()){
-			Habitacion h = aHab.buscar(getNumero());
-			if(h!=null){
-				h= validarDatos();
-				if(h!=null){
-				aHab.modificar(h);
-				listar();
-				aHab.grabarArchivo();
-				}else mensaje("Llene correctamente los campos");
-			}
+			Habitacion h = new Habitacion(getNumero(), getDescripcion(), getTipo(), getUbicacion(), getCosto(), getEstado());			
+			aHab.modificar(h);
+			llenarTabla();
+			aHab.grabarArchivo();				
 		}else mensaje("Llene todos los campos");
 	}
 	void eliminar(){
@@ -430,7 +436,7 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 				Habitacion h = aHab.buscar(getNumero());
 				if ( h != null){
 					aHab.eliminar(h);
-					listar();
+					llenarTabla();
 					aHab.grabarArchivo();
 				}else mensaje("Código no existe");
 			} catch (Exception e) {
@@ -440,42 +446,37 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 			mensaje("Escriba un código");		
 		}
 	
-	void listar(){
-		txtS.setText("");
-		imprimir("Número\tDescripcion\tTipo\tUbicación\tCosto\tEstado");
-		for (int i = 0; i < aHab.tamaño(); i++) {
+	void mostrarTabla(String[][] informacion){
+		String titulos[] = {"Número","Descripción","Tipo","Ubicacion","Costo","Estado"};
+		tHabitacion = new JTable(informacion, titulos);
+		tHabitacion.setEnabled(false);
+		tHabitacion.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		scrollPane_1.setViewportView(tHabitacion);
+	}
+	
+	void llenarTabla(){
+		String informacion[][] = new String[aHab.tamaño()][6];
+		for(int i = 0 ; i<aHab.tamaño();i++){
 			Habitacion h = aHab.obtener(i);
-			imprimir(rellenar(String.valueOf(h.getNumHabitacion()))+"\t"+
-					 rellenar(h.getDesHabitacion())+"\t"+
-					 rellenar(h.getTipo())+"\t"+
-					 rellenar(h.getUbicacion())+"\t"+
-					 rellenar(String.valueOf(sdf.format((h.getCostoHabitacion()))))+"\t"+
-					 h.getEstado()
-					);
+			informacion[i][0] = h.getNumHabitacion()+"";
+			informacion[i][1] = h.getDesHabitacion();
+			informacion[i][2] = h.getTipo();
+			informacion[i][3] = h.getUbicacion();
+			informacion[i][4] = sdf.format((h.getCostoHabitacion()))+"";
+			informacion[i][5] = h.getEstado();
 		}
+		mostrarTabla(informacion);
 	}
 	
-	void listar(Habitacion h){
-		txtS.setText("");
-
-		imprimir("Número\t:  "+String.valueOf(h.getNumHabitacion()));
-		imprimir("Descripción\t:  "+(h.getDesHabitacion()));
-		imprimir("Tipo\t:  "+(h.getTipo()));
-		imprimir("Ubicación\t:  "+ h.getUbicacion());
-		imprimir("Costo\t:  "+sdf.format((h.getCostoHabitacion())));
-		imprimir("Estado\t:"+h.getEstado());
-		
-	}
-	
-	void imprimir(String cad){
-		txtS.append(cad + "\n");
-	}
-	
-	String rellenar(String cad){
-		int longitud=cad.length();
-		for(int i=longitud; i<10; i++)
-			cad+=' ';
-		return cad;
+	void llenarTabla(Habitacion h){
+		String informacion[][] = new String[1][6];
+		informacion[0][0] = h.getNumHabitacion()+"";
+		informacion[0][1] = h.getDesHabitacion();
+		informacion[0][2] = h.getTipo();
+		informacion[0][3] = h.getUbicacion();
+		informacion[0][4] = sdf.format((h.getCostoHabitacion()))+"";
+		informacion[0][5] = h.getEstado();
+		mostrarTabla(informacion);
 	}
 	
 	void mensaje(String m) {
@@ -488,15 +489,6 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 		return false;
 	}
 	
-	Habitacion validarDatos(){
-		Habitacion h = null;
-		try {
-			h= new Habitacion(getNumero(), getDescripcion(), getTipo(), getUbicacion(), getCosto(),getEstado());			
-		} catch (Exception e) {
-			
-		}
-		return h;
-	}
 	protected void do_btnCerrar_actionPerformed(ActionEvent arg0) {
 		this.dispose();
 	}
@@ -505,6 +497,9 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	public void keyReleased(KeyEvent e) {
 	}
 	public void keyTyped(KeyEvent e) {
+		if (e.getSource() == txtCosto) {
+			do_txtCosto_keyTyped(e);
+		}
 		if (e.getSource() == txtNumero) {
 			do_txtNumero_keyTyped(e);
 		}
@@ -512,5 +507,23 @@ public class MantenimientoHabitacion extends JDialog implements ItemListener, Ac
 	protected void do_txtNumero_keyTyped(KeyEvent e) {
 		char car = e.getKeyChar();
 		if((car<'0' || car>'9'))e.consume();
+	}
+	protected void do_txtCosto_keyTyped(KeyEvent e) {
+		char car = e.getKeyChar();
+		if ((car<'0' || car>'9') && car != '.') e.consume();
+		if(car == '.' && txtCosto.getText().contains("."))e.consume();
+		
+	}
+	protected void do_btnBuscar_actionPerformed(ActionEvent arg0) {
+		if(!txtNumero.getText().isEmpty()){
+			Habitacion h = aHab.buscar(getNumero());
+			if(h!=null){
+				txtDescripcion.setText(h.getDesHabitacion());
+				cboTipo.setSelectedIndex(h.getTipoHabitacion());
+				cboUbicacion.setSelectedIndex(h.getUbicacionHabitacion());
+				txtCosto.setText(String.valueOf(h.getCostoHabitacion()));
+				cboEstado.setSelectedIndex(h.getEstadoHabitacion());
+			}else mensaje("No hay habitación con ese Número");
+		}else mensaje("Numero de Habitacion Vacio");
 	}
 }

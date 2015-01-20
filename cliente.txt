@@ -1,7 +1,9 @@
-1001,Barrenechea,Eduardo,5683466,1
+1001,Barrenechea Nicoll,Eduardo Alfonso,5683466,1
 1002,Soto,Ernesto,123451,1
 1003,Nicoll,Enrique,5218521,1
 1004,Ryback,Alberto,890123,1
 1005,Ramos,Luis,999012345,1
-1006,fapencio,oscar,99955522,0
+1006,Heracles,Oscar,99955522,1
 1007,GOMEZ,HILDA,972740107,1
+1008,Romualdo,Primitivo,5218521,1
+1009,Rios,Jose,716281,1

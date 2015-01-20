@@ -25,7 +25,8 @@ import java.awt.event.ActionEvent;
 import entidad.Recepcionista;
 import controlador.ArregloRecepcionista;
 import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;;
+import java.awt.event.KeyEvent;
+import javax.swing.JTable;;
 
 public class MantenimientoRecepcionista extends JDialog implements ItemListener, ActionListener, KeyListener {
 
@@ -36,10 +37,10 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 	private JTextField txtCodigo,txtApellido,txtNombre,txtTelefono;
 	private JButton btnProcesar,btnLimpiar;
 	private JLabel label;
-	private JScrollPane scrollPane;
-	private JTextArea txtS;
 	private JButton btnBuscar;
 	private JButton btnCerrar;
+	private JScrollPane scrollPane_1;
+	private JTable tRecepcionista;
 
 	/**
 	 * Launch the application.
@@ -58,8 +59,9 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 	 * Create the dialog.
 	 */
 	public MantenimientoRecepcionista() {
+		setResizable(false);
 		setTitle("Mantenimiento de Recepcionista");
-		setBounds(100, 100, 524, 555);
+		setBounds(100, 100, 524, 439);
 		getContentPane().setLayout(null);
 		contentPanel.setBounds(0, 0, 508, 516);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -152,14 +154,6 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 		label.setBounds(201, 136, 312, 14);
 		contentPanel.add(label);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 185, 488, 320);
-		contentPanel.add(scrollPane);
-		
-		txtS = new JTextArea();
-		txtS.setEditable(false);
-		scrollPane.setViewportView(txtS);
-		
 		lblCodigo.setVisible(false);
 		txtCodigo.setVisible(false);
 		lblApellido.setVisible(false);
@@ -182,6 +176,13 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 		btnCerrar.addActionListener(this);
 		btnCerrar.setBounds(371, 61, 89, 23);
 		contentPanel.add(btnCerrar);
+		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 161, 488, 240);
+		contentPanel.add(scrollPane_1);
+		
+		tRecepcionista = new JTable();
+		
 	}
 	public void itemStateChanged(ItemEvent arg0) {
 		if (arg0.getSource() == cboOpcion) {
@@ -210,8 +211,8 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 			break;
 		case 1:
 			btnProcesar.setEnabled(true);
-			lblCodigo.setVisible(true);
-			txtCodigo.setVisible(true);
+			lblCodigo.setVisible(false);
+			txtCodigo.setVisible(false);
 			txtCodigo.setEditable(false);
 			lblApellido.setVisible(true);
 			txtApellido.setVisible(true);
@@ -221,7 +222,7 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 			txtTelefono.setVisible(true);
 			lblEstado.setVisible(false);
 			cboEstado.setVisible(false);
-			txtCodigo.setText(""+aRec.generaCodigo());
+			//txtCodigo.setText(""+aRec.generaCodigo());
 			txtApellido.requestFocus();
 			btnBuscar.setVisible(false);
 			break;
@@ -240,7 +241,7 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 			cboEstado.setVisible(false);
 			btnBuscar.setVisible(false);
 			if(aRec.tamaño()>0){
-				listar();
+				llenarTabla();
 				btnProcesar.setEnabled(true);
 			}else{
 				btnProcesar.setEnabled(false);
@@ -282,7 +283,7 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 			cboEstado.setVisible(false);
 			btnBuscar.setVisible(false);
 			if(aRec.tamaño()>0){
-				listar();
+				llenarTabla();
 				btnProcesar.setEnabled(true);
 			}else{
 				btnProcesar.setEnabled(false);
@@ -344,28 +345,24 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 		case 2:buscar();break;
 		case 3:actualizar();break;
 		case 4:eliminar();break;
-		case 5:listar();break;
+		case 5:llenarTabla();break;
 
 		default:
 			break;
 		}
 	}
 	void ingresar(){
-		int cod;
+		
 		if(validarVacio()){
 			try {
-				cod = getCodigo();
-				Recepcionista r = aRec.buscar(cod);
-				if(r==null){
-					r = new Recepcionista(getCodigo(), getApellido(), getNombre(), getTelefono(), 1);
+				Recepcionista r = new Recepcionista(aRec.generaCodigo(), getApellido(), getNombre(), getTelefono(), 1);
 					aRec.creacion(r);
-					listar();
+					llenarTabla();
 					limpiar();
 					aRec.grabarArchivo();
 					txtCodigo.setText(""+aRec.generaCodigo());
 					txtApellido.requestFocus();
-				}else mensaje("Codigo ya existe intento con otro");
-				
+								
 			} catch (Exception e) {
 				mensaje("Código incorrecto");
 				txtCodigo.setText(""+aRec.generaCodigo());
@@ -376,28 +373,35 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 		
 	}
 	
-	void listar(){
-		txtS.setText("");
-		imprimir("Codigo\tApellido\tNombre\tTelefono\tEstado");
-		for (int i = 0; i < aRec.tamaño(); i++) {
-			Recepcionista r = aRec.obtener(i);			
-			imprimir(rellenar(String.valueOf(r.getCodRecepcionista()))+"\t"+
-					 rellenar(r.getApellidoRecepcionista())+"\t"+
-					 rellenar(r.getNombreRecepcionista())+"\t"+
-					 rellenar(r.getTelefonoRecepcionista())+"\t"+
-					 r.getEstado()
-					);
-			
-		}
+	void mostrarTabla(String informacion[][]){
+		String titulos[]={"Código","Apellido","Nombre","Telefono","Estado"};
+		tRecepcionista = new JTable(informacion, titulos);
+		tRecepcionista.setEnabled(false);
+		tRecepcionista.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		scrollPane_1.setViewportView(tRecepcionista);
 	}
 	
-	void listar(Recepcionista r){
-		txtS.setText("");
-		imprimir("Código\t:  "+String.valueOf(r.getCodRecepcionista()));
-		imprimir("Apellido\t:  "+r.getApellidoRecepcionista());
-		imprimir("Nombre\t  :"+r.getNombreRecepcionista());
-		imprimir("Telefono\t  :"+r.getTelefonoRecepcionista());
-		imprimir("Estado\t  :"+r.getEstado());
+	void llenarTabla(){		
+		String informacion[][] = new String[aRec.tamaño()][5];
+		for(int i = 0 ; i<aRec.tamaño(); i++){
+			Recepcionista r = aRec.obtener(i);
+			informacion[i][0] = r.getCodRecepcionista()+"";
+			informacion[i][1] = r.getApellidoRecepcionista();
+			informacion[i][2] = r.getNombreRecepcionista();
+			informacion[i][3] = r.getTelefonoRecepcionista();
+			informacion[i][4] = r.getEstado();
+		}
+		mostrarTabla(informacion);
+	}
+	
+	void llenarTabla(Recepcionista r){
+		String informacion[][] = new String[1][5];
+		informacion[0][0] = r.getCodRecepcionista()+"";
+		informacion[0][1] = r.getApellidoRecepcionista();
+		informacion[0][2] = r.getNombreRecepcionista();
+		informacion[0][3] = r.getTelefonoRecepcionista();
+		informacion[0][4] = r.getEstado();
+		mostrarTabla(informacion);
 	}
 	
 	void buscar(){
@@ -405,7 +409,7 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 			try {
 				Recepcionista r = aRec.buscar(getCodigo());
 				if(r != null)
-					listar(r);			
+					llenarTabla(r);			
 				else 
 					mensaje("No hay Recepcionista con ese código");
 			} catch (Exception e) {
@@ -421,7 +425,7 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 				if(r!=null){
 					Recepcionista rec = new Recepcionista(getCodigo(), getApellido(), getNombre(), getTelefono(), cboEstado.getSelectedIndex());
 					aRec.modificar(rec);
-					listar();
+					llenarTabla();
 					aRec.grabarArchivo();
 				} else mensaje("No existe codigo");
 			} catch (Exception e) {
@@ -436,7 +440,8 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 				Recepcionista r = aRec.buscar(getCodigo());
 				if ( r != null){
 					aRec.eliminar(r);
-					listar();
+					llenarTabla();
+					aRec.grabarArchivo();
 				}else mensaje("Código no existe");
 			} catch (Exception e) {
 				mensaje("Llena correctamente el código");
@@ -445,20 +450,14 @@ public class MantenimientoRecepcionista extends JDialog implements ItemListener,
 			mensaje("Escriba un código");
 	}
 	boolean validarVacio(){
-		if(!txtCodigo.getText().isEmpty() && !txtApellido.getText().isEmpty() && !txtNombre.getText().isEmpty() && !txtTelefono.getText().isEmpty())
-			return true;
+		if(cboOpcion.getSelectedIndex()== 1){
+			if(!txtApellido.getText().isEmpty() && !txtNombre.getText().isEmpty() && !txtTelefono.getText().isEmpty())
+				return true;
+		}else{
+			if(!txtCodigo.getText().isEmpty() && !txtApellido.getText().isEmpty() && !txtNombre.getText().isEmpty() && !txtTelefono.getText().isEmpty())
+				return true;
+		}		
 		return false;
-	}
-	
-	void imprimir(String cad){
-		txtS.append(cad + "\n");
-	}
-	
-	String rellenar(String cad){
-		int longitud=cad.length();
-		for(int i=longitud; i<10; i++)
-			cad+=' ';
-		return cad;
 	}
 	
 	void mensaje(String m) {

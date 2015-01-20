@@ -26,6 +26,7 @@ import entidad.Cliente;
 import controlador.ArregloCliente;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import javax.swing.JTable;
 
 public class MantenimientoCliente extends JDialog implements ItemListener, ActionListener, KeyListener {
 
@@ -36,10 +37,10 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 	private JTextField txtCodigo,txtApellido,txtNombre,txtTelefono;
 	private JButton btnProcesar,btnLimpiar;
 	private JLabel label;
-	private JScrollPane scrollPane;
-	private JTextArea txtS;
 	private JButton btnCerrar;
 	private JButton btnBuscar;
+	private JScrollPane scrollPane_1;
+	private JTable tCliente;
 
 	/**
 	 * Launch the application.
@@ -58,8 +59,9 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 	 * Create the dialog.
 	 */
 	public MantenimientoCliente() {
+		setResizable(false);
 		setTitle("Mantenimiento de Clientes");
-		setBounds(100, 100, 524, 555);
+		setBounds(100, 100, 546, 518);
 		getContentPane().setLayout(null);
 		contentPanel.setBounds(0, 0, 508, 516);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -152,14 +154,6 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 		label.setBounds(201, 136, 312, 14);
 		contentPanel.add(label);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 185, 488, 320);
-		contentPanel.add(scrollPane);
-		
-		txtS = new JTextArea();
-		txtS.setEditable(false);
-		scrollPane.setViewportView(txtS);
-		
 		lblCodigo.setVisible(false);
 		txtCodigo.setVisible(false);
 		lblApellido.setVisible(false);
@@ -179,10 +173,18 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 		contentPanel.add(btnCerrar);
 		
 		btnBuscar = new JButton("Buscar");
+		btnBuscar.setToolTipText("Llenar Datos del Cliente");
 		btnBuscar.addActionListener(this);
 		btnBuscar.setBounds(201, 32, 85, 23);
 		btnBuscar.setVisible(false);
 		contentPanel.add(btnBuscar);
+		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(35, 161, 450, 317);
+		contentPanel.add(scrollPane_1);
+		
+		tCliente = new JTable();
+		
 	}
 	public void itemStateChanged(ItemEvent arg0) {
 		if (arg0.getSource() == cboOpcion) {
@@ -211,8 +213,8 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 			break;
 		case 1:
 			btnProcesar.setEnabled(true);
-			lblCodigo.setVisible(true);
-			txtCodigo.setVisible(true);
+			lblCodigo.setVisible(false);
+			txtCodigo.setVisible(false);
 			txtCodigo.setEditable(false);
 			lblApellido.setVisible(true);
 			txtApellido.setVisible(true);
@@ -222,7 +224,7 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 			txtTelefono.setVisible(true);
 			lblEstado.setVisible(false);
 			cboEstado.setVisible(false);
-			txtCodigo.setText(""+aCli.generaCodigo());
+			//txtCodigo.setText(""+aCli.generaCodigo());
 			txtApellido.requestFocus();
 			btnBuscar.setVisible(false);
 			break;
@@ -241,7 +243,7 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 			cboEstado.setVisible(false);
 			btnBuscar.setVisible(false);
 			if(aCli.tamaño()>0){
-				listar();
+				llenarTabla();
 				btnProcesar.setEnabled(true);
 			}else{
 				btnProcesar.setEnabled(false);
@@ -283,7 +285,7 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 			cboEstado.setVisible(false);
 			btnBuscar.setVisible(false);
 			if(aCli.tamaño()>0){
-				listar();
+				llenarTabla();
 				btnProcesar.setEnabled(true);
 			}else{
 				btnProcesar.setEnabled(false);
@@ -345,60 +347,61 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 		case 2:buscar();break;
 		case 3:actualizar();break;
 		case 4:eliminar();break;
-		case 5:listar();break;
+		case 5:llenarTabla();break;
 
 		default:
 			break;
 		}
 	}
 	void ingresar(){
-		int cod;
 		if(validarVacio()){
 			try {
-				cod = getCodigo();
-				Cliente c = aCli.buscar(cod);
-				if(c==null){
-					c = new Cliente(getCodigo(), getApellido(), getNombre(), getTelefono(), 1);
+					Cliente c = new Cliente(aCli.generaCodigo(), getApellido(), getNombre(), getTelefono(), 1);
 					aCli.creacion(c);
-					listar();
+					llenarTabla();
 					limpiar();
 					aCli.grabarArchivo();
-					txtCodigo.setText(""+aCli.generaCodigo());
-					txtApellido.requestFocus();
-				}else mensaje("Codigo ya existe intento con otro");
+					//txtCodigo.setText(""+aCli.generaCodigo());
+					txtApellido.requestFocus();				
 				
 			} catch (Exception e) {
 				mensaje("Código incorrecto");
-				txtCodigo.setText(""+aCli.generaCodigo());
+				//txtCodigo.setText(""+aCli.generaCodigo());
 				txtApellido.requestFocus();
 			}
 		}
 		else mensaje("Llene todos los Campos");
 		
 	}
-	
-	void listar(){
-		txtS.setText("");
-		imprimir("Codigo\tApellido\tNombre\tTelefono\tEstado");
-		for (int i = 0; i < aCli.tamaño(); i++) {
-			Cliente c = aCli.obtener(i);			
-			imprimir(rellenar(String.valueOf(c.getCodCliente()))+"\t"+
-					 rellenar(c.getApellidoCliente())+"\t"+
-					 rellenar(c.getNombreCliente())+"\t"+
-					 rellenar(c.getTelefonoCliente())+"\t"+
-					 c.getEstado()
-					);
-			
-		}
+	void mostrarTabla(String[][] informacion){
+		String titulos[]={"Codigo","Apellido","Nombre","Telefono","Estado"};
+		tCliente = new JTable(informacion, titulos);
+		tCliente.setEnabled(false);
+		tCliente.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		scrollPane_1.setViewportView(tCliente);
 	}
 	
-	void listar(Cliente c){
-		txtS.setText("");
-		imprimir("Código\t:  "+String.valueOf(c.getCodCliente()));
-		imprimir("Apellido\t:  "+c.getApellidoCliente());
-		imprimir("Nombre\t  :"+c.getNombreCliente());
-		imprimir("Telefono\t  :"+c.getTelefonoCliente());
-		imprimir("Estado\t  :"+c.getEstado());
+	void llenarTabla(){		
+		String informacion[][] = new String[aCli.tamaño()][5];
+		for (int i = 0; i < aCli.tamaño(); i++) {
+			Cliente c = aCli.obtener(i);
+			informacion[i][0] = c.getCodCliente()+"";
+			informacion[i][1] = c.getApellidoCliente();
+			informacion[i][2] = c.getNombreCliente();
+			informacion[i][3] = c.getTelefonoCliente();
+			informacion[i][4] = c.getEstado();			
+		}
+		mostrarTabla(informacion);
+	}
+	
+	void llenarTabla(Cliente c){
+		String informacion[][]= new String[1][5];
+		informacion[0][0] = c.getCodCliente()+"";
+		informacion[0][1] = c.getApellidoCliente();
+		informacion[0][2] = c.getNombreCliente();
+		informacion[0][3] = c.getTelefonoCliente();
+		informacion[0][4] = c.getEstado();	
+		mostrarTabla(informacion);
 	}
 	
 	void buscar(){
@@ -406,7 +409,7 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 			try {
 				Cliente c = aCli.buscar(getCodigo());
 				if(c != null)
-					listar(c);			
+					llenarTabla(c);			
 				else 
 					mensaje("No hay Cliente con ese código");
 			} catch (Exception e) {
@@ -422,7 +425,7 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 				if(c!=null){
 					Cliente cli = new Cliente(getCodigo(), getApellido(), getNombre(), getTelefono(), cboEstado.getSelectedIndex());
 					aCli.modificar(cli);
-					listar();
+					llenarTabla();
 					aCli.grabarArchivo();
 				} else mensaje("No existe codigo");
 			} catch (Exception e) {
@@ -437,7 +440,8 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 				Cliente c = aCli.buscar(getCodigo());
 				if ( c != null){
 					aCli.eliminar(c);
-					listar();
+					aCli.grabarArchivo();
+					llenarTabla();
 				}else mensaje("Código no existe");
 			} catch (Exception e) {
 				mensaje("Llena correctamente el código");
@@ -446,20 +450,14 @@ public class MantenimientoCliente extends JDialog implements ItemListener, Actio
 			mensaje("Escriba un código");
 	}
 	boolean validarVacio(){
-		if(!txtCodigo.getText().isEmpty() && !txtApellido.getText().isEmpty() && !txtNombre.getText().isEmpty() && !txtTelefono.getText().isEmpty())
+		if(cboOpcion.getSelectedIndex()== 1){
+		if(!txtApellido.getText().isEmpty() && !txtNombre.getText().isEmpty() && !txtTelefono.getText().isEmpty())
 			return true;
+		}else {
+			if(!txtCodigo.getText().isEmpty() && !txtApellido.getText().isEmpty() && !txtNombre.getText().isEmpty() && !txtTelefono.getText().isEmpty())
+			return true;
+		}
 		return false;
-	}
-	
-	void imprimir(String cad){
-		txtS.append(cad + "\n");
-	}
-	
-	String rellenar(String cad){
-		int longitud=cad.length();
-		for(int i=longitud; i<10; i++)
-			cad+=' ';
-		return cad;
 	}
 	
 	void mensaje(String m) {

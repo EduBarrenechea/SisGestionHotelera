@@ -69,7 +69,7 @@ public class Habitacion {
 	
 	public String getEstado(){
 		String tipo="";
-		switch (this.ubicacionHabitacion) {
+		switch (this.estadoHabitacion) {
 		case 1:tipo="Disponible";break;
 		case 2:tipo="Reservada";break;
 		case 3:tipo="Ocupada";break;
