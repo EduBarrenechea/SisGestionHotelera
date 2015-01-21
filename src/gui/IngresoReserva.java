@@ -18,7 +18,8 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JFormattedTextField;
+
+
 
 
 public class IngresoReserva extends JDialog implements ActionListener {
@@ -36,7 +37,7 @@ public class IngresoReserva extends JDialog implements ActionListener {
 	private JTextField txtFechaSalida;
 	private JButton btnGrabar;
 	private JButton btnLimpiar;
-	private JButton btnCancelar;
+	private JButton btnCerrar;
 
 	/**
 	 * Launch the application.
@@ -60,7 +61,7 @@ public class IngresoReserva extends JDialog implements ActionListener {
 	 */
 	public IngresoReserva() {
 		setTitle("Ingreso de Reserva");
-		setBounds(100, 100, 550, 300);
+		setBounds(100, 100, 550, 409);
 		getContentPane().setLayout(null);
 		
 		lblCodigo = new JLabel("C\u00F3digo :");
@@ -130,18 +131,18 @@ public class IngresoReserva extends JDialog implements ActionListener {
 		
 		btnGrabar = new JButton("Grabar");
 		btnGrabar.addActionListener(this);
-		btnGrabar.setBounds(42, 201, 100, 23);
+		btnGrabar.setBounds(10, 277, 100, 23);
 		getContentPane().add(btnGrabar);
 		
 		btnLimpiar = new JButton("Limpiar");
 		btnLimpiar.addActionListener(this);
-		btnLimpiar.setBounds(164, 201, 92, 23);
+		btnLimpiar.setBounds(132, 277, 92, 23);
 		getContentPane().add(btnLimpiar);
 		
-		btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(this);
-		btnCancelar.setBounds(273, 201, 91, 23);
-		getContentPane().add(btnCancelar);
+		btnCerrar = new JButton("Cerrar");
+		btnCerrar.addActionListener(this);
+		btnCerrar.setBounds(241, 277, 91, 23);
+		getContentPane().add(btnCerrar);
 
 	}
 	
@@ -160,13 +161,14 @@ public class IngresoReserva extends JDialog implements ActionListener {
 	}
 	
 	void llenaComboHabitacion(){
-		for (int i = 0; i < aHab.tamaño(); i++) {
-			Habitacion h = aHab.obtener(i);
+		ArrayList<Habitacion> aHabDispo = aHab.habitacionesXestado(1);
+		for (Habitacion h : aHabDispo) {
 			cboHabitacion.addItem(h.getNumHabitacion());
-			}
+		}		
 	}
+	
 	public void actionPerformed(ActionEvent arg0) {
-		if (arg0.getSource() == btnCancelar) {
+		if (arg0.getSource() == btnCerrar) {
 			do_btnCancelar_actionPerformed(arg0);
 		}
 		if (arg0.getSource() == btnGrabar) {
@@ -190,7 +192,7 @@ public class IngresoReserva extends JDialog implements ActionListener {
 	int getCodigo(){return Integer.parseInt(txtCodigo.getText());}
 	int getCodCliente(){return (aCli.obtener(cboCliente.getSelectedIndex())).getCodCliente();}
 	int getCodRecepcionista(){return (aRec.obtener(cboRecepcionista.getSelectedIndex())).getCodRecepcionista();}
-	int getNumeroHabitacion(){return (aHab.obtener(cboHabitacion.getSelectedIndex())).getNumHabitacion();}
+	int getNumeroHabitacion(){return (int)(cboHabitacion.getSelectedItem());}
 	String getFechaRegistro(){return txtFechaRegistro.getText();}
 	String getFechaIngreso(){return txtFechaIngreso.getText();}
 	String getFechaSalida(){return txtFechaSalida.getText();}
@@ -202,7 +204,8 @@ public class IngresoReserva extends JDialog implements ActionListener {
 					try {
 						Reserva r= new Reserva(getCodCliente(), getCodCliente(), getCodRecepcionista(), getNumeroHabitacion(), getFechaRegistro(), getFechaIngreso(), getFechaSalida()	, 0);
 						aRes.creacion(r);
-						mensaje("Reserva realizada");
+						mensaje("Reserva realizada con Código :" + getCodigo());
+						cambiarHabitacion(getNumeroHabitacion());
 						aRes.grabarArchivo();
 					} catch (Exception e) {
 						mensaje("Ingrese codigo correctamente");
@@ -213,6 +216,12 @@ public class IngresoReserva extends JDialog implements ActionListener {
 		}else mensaje("Llene todos los campos");
 	}
 	
+	void cambiarHabitacion(int num){
+		aHab.cambioEstado(num, 2);
+		aHab.grabarArchivo();
+		cboHabitacion.removeAllItems();
+		llenaComboHabitacion();
+	}
 	boolean validarVacio(){
 		if(!txtCodigo.getText().isEmpty() && !txtFechaRegistro.getText().isEmpty() && !txtFechaIngreso.getText().isEmpty() && !txtFechaSalida.getText().isEmpty())
 			return true;
@@ -250,6 +259,6 @@ public class IngresoReserva extends JDialog implements ActionListener {
 		JOptionPane.showMessageDialog(this,m);
 	}
 	protected void do_btnCancelar_actionPerformed(ActionEvent arg0) {
-
+		this.dispose();
 	}
 }

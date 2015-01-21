@@ -15,6 +15,7 @@ import entidad.*;
 import controlador.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
 
 public class ListadoHospedaje extends JDialog implements ActionListener {
 	
@@ -28,7 +29,9 @@ public class ListadoHospedaje extends JDialog implements ActionListener {
 	private final JPanel contentPanel = new JPanel();
 	private JScrollPane scrollPane;
 	private final JTextArea txtS = new JTextArea();
-	private JButton btnSalir;
+	private JButton btnCerrar;
+	private JButton btnListar;
+	private JComboBox cboListar;
 
 	/**
 	 * Launch the application.
@@ -48,24 +51,32 @@ public class ListadoHospedaje extends JDialog implements ActionListener {
 	 */
 	public ListadoHospedaje() {
 		setTitle("Listado de Hospedajes");
-		setBounds(100, 100, 765, 421);
+		setBounds(100, 100, 765, 499);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
-			btnSalir = new JButton("Salir");
-			btnSalir.addActionListener(this);
-			btnSalir.setBounds(648, 349, 91, 23);
-			contentPanel.add(btnSalir);
+			btnCerrar = new JButton("Cerrar");
+			btnCerrar.addActionListener(this);
+			btnCerrar.setBounds(457, 45, 91, 23);
+			contentPanel.add(btnCerrar);
 		}
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 10, 729, 312);
+		scrollPane.setBounds(10, 353, 729, 62);
 		contentPanel.add(scrollPane);
 		txtS.setEditable(false);
 		
 		scrollPane.setViewportView(txtS);
+		
+		btnListar = new JButton("Listar");
+		btnListar.setBounds(457, 11, 89, 23);
+		contentPanel.add(btnListar);
+		
+		cboListar = new JComboBox();
+		cboListar.setBounds(267, 12, 180, 20);
+		contentPanel.add(cboListar);
 		listarHospedajes();
 	}
 	
@@ -109,7 +120,7 @@ String rellenar(String cad){
 	
 	
 	public void actionPerformed(ActionEvent arg0) {
-		if (arg0.getSource() == btnSalir) {
+		if (arg0.getSource() == btnCerrar) {
 			do_btnSalir_actionPerformed(arg0);
 		}
 	}

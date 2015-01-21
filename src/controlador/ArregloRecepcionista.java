@@ -49,6 +49,15 @@ public class ArregloRecepcionista {
 		}
 	}
 	
+	public String traeNombreRec(int cod){
+		for (Recepcionista r : rec) {
+			if(r.getCodRecepcionista() == cod){
+				return r.getApellidoRecepcionista()+","+r.getNombreRecepcionista();
+			}
+		}
+		return "";
+	}
+	
 	public void cargarArchivo(){
 		try {
 			FileReader fr = new FileReader("recepcionista.txt");

@@ -6,15 +6,23 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import entidad.*;
 import controlador.*;
+
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.JTable;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.RestoreAction;
 
 public class AnularReserva extends JDialog implements ItemListener, ActionListener {
 	
@@ -25,8 +33,9 @@ public class AnularReserva extends JDialog implements ItemListener, ActionListen
 	private JLabel lblCdigo;
 	private JComboBox cboCodigo;
 	private JButton btnAnular;
-	private JScrollPane scrollPane;
-	private JTextArea txtS;
+	private JScrollPane scrollPane_1;
+	private JTable tReserva;
+	private JButton btnCerrar;
 
 	/**
 	 * Launch the application.
@@ -49,7 +58,8 @@ public class AnularReserva extends JDialog implements ItemListener, ActionListen
 	 * Create the dialog.
 	 */
 	public AnularReserva() {
-		setBounds(100, 100, 408, 378);
+		setTitle("Anular Reserva");
+		setBounds(100, 100, 408, 339);
 		getContentPane().setLayout(null);
 		
 		lblCdigo = new JLabel("C\u00F3digo :");
@@ -58,55 +68,103 @@ public class AnularReserva extends JDialog implements ItemListener, ActionListen
 		
 		cboCodigo = new JComboBox();
 		
-		cboCodigo.setBounds(120, 11, 140, 20);
+		cboCodigo.setBounds(96, 11, 164, 20);
 		llenarCombo();
 		cboCodigo.addItemListener(this);
 		getContentPane().add(cboCodigo);
 		
 		btnAnular = new JButton("Anular");
 		btnAnular.addActionListener(this);
-		btnAnular.setBounds(292, 11, 83, 20);
+		btnAnular.setBounds(292, 11, 89, 23);
+		btnAnular.setEnabled(false);
 		getContentPane().add(btnAnular);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 51, 365, 267);
-		getContentPane().add(scrollPane);
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 82, 371, 210);
+		getContentPane().add(scrollPane_1);
 		
-		txtS = new JTextArea();
-		scrollPane.setViewportView(txtS);	
-		listarReservacion(0);
+		btnCerrar = new JButton("Cerrar");
+		btnCerrar.addActionListener(this);
+		btnCerrar.setBounds(292, 35, 89, 23);
+		getContentPane().add(btnCerrar);
+		
+		tReserva = new JTable();
+		
 	}
 	
-	void listarReservacion(int pos){
-		txtS.setText("");
-		Reserva r = aRes.obtener(pos);
-		imprimir("Codigo:\t"+r.getCodReserva());
-		imprimir("Cliente:\t"+obtenerCliente(r.getCodCliente()));
-		imprimir("Recepcionista:\t"+obtenerRecepcionista(r.getCodRecepcionista()));
-		imprimir("Fecha Registro:\t"+r.getFechaRegistroReserva());
-		imprimir("Fecha Ingreso:\t"+r.getFechaIngresoReserva());
-		imprimir("Fecha Salida:\t"+r.getFechaSalidaReserva());
-		imprimir("Estado:\t"+r.getEstado());
+	void llenarTabla(){
+		
+		if(cboCodigo.getSelectedIndex() > 0){			
+			String informacion[][] = tablaData();
+			mostrarTabla(informacion);
+		}
+		else{
+			String informacion[][] = tablaVacia();
+			mostrarTabla(informacion);
+		}		
+		
 	}
 	
-	void imprimir(String cad){
-		txtS.append(cad + "\n");
+	String[][] tablaData(){
+		int cod = (int)(cboCodigo.getSelectedItem());
+		Reserva r = aRes.buscar(cod);
+		String informacion[][] = new String[8][2];
+		informacion[0][0]= "Código";
+		informacion[0][1]= r.getCodReserva()+"";
+		informacion[1][0]= "Cliente";
+		informacion[1][1]= aCli.traerNombreCli(r.getCodCliente());
+		informacion[2][0]= "Recepcionista";
+		informacion[2][1]= aRec.traeNombreRec(r.getCodRecepcionista());
+		informacion[3][0]= "Numero H";
+		informacion[3][1]= r.getNumeroHabitacion()+"";
+		informacion[4][0]= "Fecha Registro";
+		informacion[4][1]= r.getFechaRegistroReserva();
+		informacion[5][0]= "Fecha Ingreso";
+		informacion[5][1]= r.getFechaIngresoReserva();
+		informacion[6][0]= "Fecha Salida";
+		informacion[6][1]= r.getFechaSalidaReserva();
+		informacion[7][0]= "Estado";
+		informacion[7][1]= r.getEstado();
+		return informacion;
 	}
 	
-
-	String obtenerCliente(int cod){
-		return (aCli.buscar(cod)).getApellidoCliente()+" "+(aCli.buscar(cod)).getNombreCliente();
+	String[][] tablaVacia(){
+		String informacion[][] = new String[8][2];
+		informacion[0][0]= "Código";
+		informacion[0][1]= "--";
+		informacion[1][0]= "Cliente";
+		informacion[1][1]= "--";
+		informacion[2][0]= "Recepcionista";
+		informacion[2][1]= "--";
+		informacion[3][0]= "Numero H";
+		informacion[3][1]= "--";
+		informacion[4][0]= "Fecha Registro";
+		informacion[4][1]= "--";
+		informacion[5][0]= "Fecha Ingreso";
+		informacion[5][1]= "--";
+		informacion[6][0]= "Fecha Salida";
+		informacion[6][1]= "--";
+		informacion[7][0]= "Estado";
+		informacion[7][1]= "--";
+		return informacion;
 	}
 	
-	String obtenerRecepcionista(int cod){
-		return (aRec.buscar(cod)).getApellidoRecepcionista()+" "+(aRec.buscar(cod)).getNombreRecepcionista();
+	void mostrarTabla(String[][] informacion){
+		String titulos[] ={"Registro","Dato"};
+		tReserva = new JTable(informacion,titulos);
+		tReserva.setEnabled(false);
+		tReserva.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		scrollPane_1.setViewportView(tReserva);
 	}
 	
 	void llenarCombo(){
-		for (int i = 0; i < aRes.tamaño(); i++) {
-			Reserva r = aRes.obtener(i);
-			cboCodigo.addItem(r.getCodReserva());			
+		cboCodigo.removeAllItems();
+		cboCodigo.addItem("-- Seleccione Reserva --");
+		ArrayList<Reserva> aux = aRes.rEstado(0);
+		for (Reserva r : aux) {
+			cboCodigo.addItem(r.getCodReserva());
 		}
+
 	}
 	public void itemStateChanged(ItemEvent arg0) {
 		if (arg0.getSource() == cboCodigo) {
@@ -114,21 +172,43 @@ public class AnularReserva extends JDialog implements ItemListener, ActionListen
 		}
 	}
 	protected void do_cboCodigo_itemStateChanged(ItemEvent arg0) {
-		seleccionar();
-		
+		if(cboCodigo.getSelectedIndex()==0)
+			btnAnular.setEnabled(false);
+		else
+			btnAnular.setEnabled(true);
+		seleccionar();		
 	}
 	
 	void seleccionar(){
-		listarReservacion(cboCodigo.getSelectedIndex());
+		llenarTabla();
 	}
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnCerrar) {
+			btnCerrarActionPerformed(arg0);
+		}
 		if (arg0.getSource() == btnAnular) {
 			do_btnAnular_actionPerformed(arg0);
 		}
 	}
 	protected void do_btnAnular_actionPerformed(ActionEvent arg0) {
-		aRes.modificar(cboCodigo.getSelectedIndex(),1);
-		aRes.grabarArchivo();
-		seleccionar();
+		if(cboCodigo.getSelectedIndex()> 0){
+			int cod = (int)(cboCodigo.getSelectedItem());
+			Reserva r = aRes.buscar(cod);
+			r.setEstadoReserva(1);
+			aRes.grabarArchivo();
+			mensaje("Reserva "+cod+" anulada");
+			llenarCombo();
+			cboCodigo.setSelectedIndex(0);
+			llenarTabla();
+		}else{
+			
+		}
+		
+	}
+	void mensaje(String m) {
+		JOptionPane.showMessageDialog(this,m);
+	}
+	protected void btnCerrarActionPerformed(ActionEvent arg0) {
+		this.dispose();
 	}
 }

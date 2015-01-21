@@ -49,6 +49,13 @@ public class ArregloCliente {
 		}
 	}
 	
+	public String traerNombreCli(int cod){
+		for (Cliente c : cli) {
+			if(c.getCodCliente() == cod)
+				return c.getApellidoCliente()+","+c.getNombreCliente();
+		}
+		return "";
+	}
 	public void cargarArchivo(){
 		try {
 			FileReader fr = new FileReader("cliente.txt");

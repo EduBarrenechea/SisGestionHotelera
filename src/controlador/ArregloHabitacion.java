@@ -47,10 +47,17 @@ public class ArregloHabitacion {
 		for (int i = 0; i < tamaño() ; i++) {
 			if(hab.get(i).getNumHabitacion() == h.getNumHabitacion())
 				hab.set(i,h);
+		}		
+	}
+	
+	public ArrayList<Habitacion> habitacionesXestado(int estado){
+		ArrayList<Habitacion> aH = new ArrayList<Habitacion>();
+		for (Habitacion h : hab) {
+			if(h.getEstadoHabitacion() == estado){
+				aH.add(h);
+			}
 		}
-		
-		
-		
+		return aH;
 	}
 	
 	public void modificar(Habitacion h){

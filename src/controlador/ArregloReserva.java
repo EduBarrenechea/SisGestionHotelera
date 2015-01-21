@@ -31,15 +31,8 @@ public class ArregloReserva {
 	}
 	
 	public Reserva obtener(int pos){
-		return res.get(pos);
+		return res.get(pos); 
 	}
-	
-	/*public void modificar(Reserva r){
-		for (int i = 0; i < tamaño(); i++) {
-			if(res.get(i).getCodReserva() == r.getCodReserva())
-				res.set(i, r);				
-		}
-	}*/
 	
 	public void modificar(int pos,int est){
 		Reserva r = obtener(pos);
@@ -58,6 +51,15 @@ public class ArregloReserva {
 		ArrayList<Reserva> aRes =  new ArrayList<Reserva>();
 		for (Reserva r : res) {
 			if(r.getCodCliente() == codCli)
+				aRes.add(r);
+		}
+		return aRes;
+	}
+	
+	public ArrayList<Reserva> rEstado(int est){
+		ArrayList<Reserva> aRes = new ArrayList<Reserva>();
+		for (Reserva r : res) {
+			if(r.getEstadoReserva() == est)
 				aRes.add(r);
 		}
 		return aRes;
