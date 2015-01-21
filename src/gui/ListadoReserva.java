@@ -88,10 +88,7 @@ public class ListadoReserva extends JDialog implements ActionListener {
 			scrollPane.setBounds(10, 72, 805, 332);
 			contentPanel.add(scrollPane);
 			
-			tReserva = new JTable();
-			
-			
-		
+			tReserva = new JTable();		
 	}
 
 	public void actionPerformed(ActionEvent e) {

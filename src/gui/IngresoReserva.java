@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 
 import java.util.*;
 import java.text.*;
@@ -18,6 +17,7 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import com.toedter.calendar.JDateChooser;
 
 
 
@@ -29,15 +29,14 @@ public class IngresoReserva extends JDialog implements ActionListener {
 	ArregloHabitacion aHab = new ArregloHabitacion();
 	DateFormat f = DateFormat.getDateInstance(DateFormat.MEDIUM);
 	
-	private JLabel lblCodigo, lblCliente , lblRecepcionista ,lblHabitacion, lblFechaDeRegistro, lblFechaDeIngreso ,lblFechaDeSalida ;
-	private JTextField txtCodigo;
+	private JLabel lblCliente , lblRecepcionista ,lblHabitacion, lblFechaDeRegistro, lblFechaDeIngreso ,lblFechaDeSalida ;
 	private JComboBox cboCliente, cboRecepcionista,cboHabitacion ;
-	private JTextField txtFechaRegistro;
-	private JTextField txtFechaIngreso;
-	private JTextField txtFechaSalida;
 	private JButton btnGrabar;
 	private JButton btnLimpiar;
 	private JButton btnCerrar;
+	private JDateChooser dFechaRegistro;
+	private JDateChooser dFechaIngreso;
+	private JDateChooser dFechaSalida;
 
 	/**
 	 * Launch the application.
@@ -61,12 +60,8 @@ public class IngresoReserva extends JDialog implements ActionListener {
 	 */
 	public IngresoReserva() {
 		setTitle("Ingreso de Reserva");
-		setBounds(100, 100, 550, 409);
+		setBounds(100, 100, 405, 289);
 		getContentPane().setLayout(null);
-		
-		lblCodigo = new JLabel("C\u00F3digo :");
-		lblCodigo.setBounds(10, 11, 100, 14);
-		getContentPane().add(lblCodigo);
 		
 		lblCliente = new JLabel("Cliente :");
 		lblCliente.setBounds(10, 36, 100, 14);
@@ -92,13 +87,6 @@ public class IngresoReserva extends JDialog implements ActionListener {
 		lblFechaDeSalida.setBounds(10, 161, 110, 14);
 		getContentPane().add(lblFechaDeSalida);
 		
-		txtCodigo = new JTextField();
-		txtCodigo.setBounds(134, 11, 86, 20);
-		getContentPane().add(txtCodigo);
-		txtCodigo.setText(""+aRes.generaCodigo());
-		txtCodigo.setEditable(false);
-		txtCodigo.setColumns(10);
-		
 		cboCliente = new JComboBox();
 		cboCliente.setBounds(134, 36, 230, 20);
 		llenarComboCliente();
@@ -114,35 +102,32 @@ public class IngresoReserva extends JDialog implements ActionListener {
 		llenaComboHabitacion();
 		getContentPane().add(cboHabitacion);
 		
-		txtFechaRegistro = new JTextField();
-		txtFechaRegistro.setBounds(134, 111, 110, 20);
-		getContentPane().add(txtFechaRegistro);
-		txtFechaRegistro.setColumns(10);
-		
-		txtFechaIngreso = new JTextField();
-		txtFechaIngreso.setBounds(134, 136, 110, 20);
-		getContentPane().add(txtFechaIngreso);
-		txtFechaIngreso.setColumns(10);
-		
-		txtFechaSalida = new JTextField();
-		txtFechaSalida.setBounds(134, 161, 110, 20);
-		getContentPane().add(txtFechaSalida);
-		txtFechaSalida.setColumns(10);
-		
 		btnGrabar = new JButton("Grabar");
 		btnGrabar.addActionListener(this);
-		btnGrabar.setBounds(10, 277, 100, 23);
+		btnGrabar.setBounds(10, 192, 100, 23);
 		getContentPane().add(btnGrabar);
 		
 		btnLimpiar = new JButton("Limpiar");
 		btnLimpiar.addActionListener(this);
-		btnLimpiar.setBounds(132, 277, 92, 23);
+		btnLimpiar.setBounds(132, 192, 92, 23);
 		getContentPane().add(btnLimpiar);
 		
 		btnCerrar = new JButton("Cerrar");
 		btnCerrar.addActionListener(this);
-		btnCerrar.setBounds(241, 277, 91, 23);
+		btnCerrar.setBounds(241, 192, 91, 23);
 		getContentPane().add(btnCerrar);
+		
+		dFechaRegistro = new JDateChooser();
+		dFechaRegistro.setBounds(134, 111, 120, 20);
+		getContentPane().add(dFechaRegistro);
+		
+		dFechaIngreso = new JDateChooser();
+		dFechaIngreso.setBounds(134, 136, 120, 20);
+		getContentPane().add(dFechaIngreso);
+		
+		dFechaSalida = new JDateChooser();
+		dFechaSalida.setBounds(134, 161, 120, 20);
+		getContentPane().add(dFechaSalida);
 
 	}
 	
@@ -162,9 +147,13 @@ public class IngresoReserva extends JDialog implements ActionListener {
 	
 	void llenaComboHabitacion(){
 		ArrayList<Habitacion> aHabDispo = aHab.habitacionesXestado(1);
+		if (aHabDispo.size()>0)
 		for (Habitacion h : aHabDispo) {
 			cboHabitacion.addItem(h.getNumHabitacion());
-		}		
+		}else{
+			mensaje("No hay Cuartos disponibles para Reservación");
+			this.dispose();
+		}
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -183,74 +172,45 @@ public class IngresoReserva extends JDialog implements ActionListener {
 	}
 	
 	void limpiar(){
-		txtCodigo.setText(""+aRes.generaCodigo());
-		txtFechaRegistro.setText("");
-		txtFechaIngreso.setText("");
-		txtFechaSalida.setText("");
+		//txtCodigo.setText(""+aRes.generaCodigo());
+				
 	}
 	
-	int getCodigo(){return Integer.parseInt(txtCodigo.getText());}
+	//int getCodigo(){return Integer.parseInt(txtCodigo.getText());}
 	int getCodCliente(){return (aCli.obtener(cboCliente.getSelectedIndex())).getCodCliente();}
 	int getCodRecepcionista(){return (aRec.obtener(cboRecepcionista.getSelectedIndex())).getCodRecepcionista();}
 	int getNumeroHabitacion(){return (int)(cboHabitacion.getSelectedItem());}
-	String getFechaRegistro(){return txtFechaRegistro.getText();}
-	String getFechaIngreso(){return txtFechaIngreso.getText();}
-	String getFechaSalida(){return txtFechaSalida.getText();}
+	String getFechaRegistro(){return getFecha(dFechaRegistro);}
+	String getFechaIngreso(){return getFecha(dFechaIngreso);}
+	String getFechaSalida(){return getFecha(dFechaSalida);}
 	
 	protected void do_btnGrabar_actionPerformed(ActionEvent arg0) {
 		if(validarVacio()){
-			if(validaFecha()){
-				if(validaDiaReal(getFechaRegistro()) && validaMesReal(getFechaRegistro()) && validaDiaReal(getFechaIngreso()) && validaMesReal(getFechaIngreso()) && validaDiaReal(getFechaSalida()) && validaMesReal(getFechaSalida())){
+			
 					try {
-						Reserva r= new Reserva(getCodCliente(), getCodCliente(), getCodRecepcionista(), getNumeroHabitacion(), getFechaRegistro(), getFechaIngreso(), getFechaSalida()	, 0);
+						Reserva r= new Reserva(aRes.generaCodigo(), getCodCliente(), getCodRecepcionista(), getNumeroHabitacion(), getFechaRegistro(), getFechaIngreso(), getFechaSalida()	, 0);
+						mensaje("Reserva realizada con Código :" + aRes.generaCodigo());
 						aRes.creacion(r);
-						mensaje("Reserva realizada con Código :" + getCodigo());
 						cambiarHabitacion(getNumeroHabitacion());
 						aRes.grabarArchivo();
 					} catch (Exception e) {
 						mensaje("Ingrese codigo correctamente");
 					}
-				}else mensaje("Ingrese fechas Reales");
-			}else mensaje("Ingrese Fecha con Formato DD/MM/YYYY");
+				
+			
 			
 		}else mensaje("Llene todos los campos");
 	}
 	
 	void cambiarHabitacion(int num){
-		aHab.cambioEstado(num, 2);
+		Habitacion h = aHab.buscar(num);
+		h.setEstadoHabitacion(2);
 		aHab.grabarArchivo();
 		cboHabitacion.removeAllItems();
 		llenaComboHabitacion();
 	}
 	boolean validarVacio(){
-		if(!txtCodigo.getText().isEmpty() && !txtFechaRegistro.getText().isEmpty() && !txtFechaIngreso.getText().isEmpty() && !txtFechaSalida.getText().isEmpty())
-			return true;
-		return false;
-	}
-	
-	boolean validaFecha(){
-			try {
-				Date fechaRegistro = f.parse(txtFechaRegistro.getText());
-				Date fechaIngreso = f.parse(txtFechaIngreso.getText());
-				Date fechaSalida = f.parse(txtFechaSalida.getText());
-				return true;
-				
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		return false;
-	}
-	
-	boolean validaDiaReal(String fecha){
-		int dia= Integer.parseInt(fecha.substring(0, 2));
-			if( 0 < dia && dia <=31)
-				return true;
-		return false;
-	} 
-	
-	boolean validaMesReal(String fecha){
-		int mes = Integer.parseInt(fecha.substring(3, 5));
-		if( 0 < mes && mes <=12)
+		if(getFechaRegistro()!=null && getFechaIngreso()!=null && getFechaSalida()!=null)
 			return true;
 		return false;
 	}
@@ -260,5 +220,14 @@ public class IngresoReserva extends JDialog implements ActionListener {
 	}
 	protected void do_btnCancelar_actionPerformed(ActionEvent arg0) {
 		this.dispose();
+	}
+	
+	SimpleDateFormat Formato = new SimpleDateFormat("dd/MM/yyyy");
+	public String getFecha(JDateChooser jd){
+		if(jd.getDate()!=null){
+			return Formato.format(jd.getDate());
+		}else{
+			return null;
+		}
 	}
 }
